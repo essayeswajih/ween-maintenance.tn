@@ -2,12 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict vJ1aiSExLzyEAIlrgSXAU8Vc2DLfAcgWRXqsdL144bbtLo17unrRcmc5sy4OaWN
+\restrict pDXwZVcKbFAdc53mYHBpZusQjOlaP98fhdrLSNeJ0dbYR9aqrLp2WLEXX0DtT8f
 
--- Dumped from database version 18.1
--- Dumped by pg_dump version 18.1
-
--- Started on 2026-01-29 13:20:06
+-- Dumped from database version 16.11 (Debian 16.11-1.pgdg13+1)
+-- Dumped by pg_dump version 17.7 (Debian 17.7-0+deb13u1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -22,7 +20,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 881 (class 1247 OID 16391)
 -- Name: orderstatus; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -41,7 +38,51 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 240 (class 1259 OID 16593)
+-- Name: blogs; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blogs (
+    id integer NOT NULL,
+    title character varying NOT NULL,
+    content text NOT NULL,
+    category character varying,
+    author character varying,
+    image_url text,
+    slug character varying NOT NULL,
+    views integer,
+    status character varying,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now(),
+    excerpt text,
+    read_time character varying DEFAULT '5 min'::character varying
+);
+
+
+ALTER TABLE public.blogs OWNER TO postgres;
+
+--
+-- Name: blogs_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.blogs_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.blogs_id_seq OWNER TO postgres;
+
+--
+-- Name: blogs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.blogs_id_seq OWNED BY public.blogs.id;
+
+
+--
 -- Name: cart_items; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -56,7 +97,6 @@ CREATE TABLE public.cart_items (
 ALTER TABLE public.cart_items OWNER TO postgres;
 
 --
--- TOC entry 239 (class 1259 OID 16592)
 -- Name: cart_items_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -72,8 +112,6 @@ CREATE SEQUENCE public.cart_items_id_seq
 ALTER SEQUENCE public.cart_items_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5218 (class 0 OID 0)
--- Dependencies: 239
 -- Name: cart_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -81,7 +119,6 @@ ALTER SEQUENCE public.cart_items_id_seq OWNED BY public.cart_items.id;
 
 
 --
--- TOC entry 222 (class 1259 OID 16414)
 -- Name: categories; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -96,7 +133,6 @@ CREATE TABLE public.categories (
 ALTER TABLE public.categories OWNER TO postgres;
 
 --
--- TOC entry 221 (class 1259 OID 16413)
 -- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -112,8 +148,6 @@ CREATE SEQUENCE public.categories_id_seq
 ALTER SEQUENCE public.categories_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5219 (class 0 OID 0)
--- Dependencies: 221
 -- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -121,7 +155,6 @@ ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
--- TOC entry 226 (class 1259 OID 16446)
 -- Name: categories_service; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -137,7 +170,6 @@ CREATE TABLE public.categories_service (
 ALTER TABLE public.categories_service OWNER TO postgres;
 
 --
--- TOC entry 225 (class 1259 OID 16445)
 -- Name: categories_service_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -153,8 +185,6 @@ CREATE SEQUENCE public.categories_service_id_seq
 ALTER SEQUENCE public.categories_service_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5220 (class 0 OID 0)
--- Dependencies: 225
 -- Name: categories_service_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -162,12 +192,12 @@ ALTER SEQUENCE public.categories_service_id_seq OWNED BY public.categories_servi
 
 
 --
--- TOC entry 232 (class 1259 OID 16499)
 -- Name: freelancers; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.freelancers (
     id integer NOT NULL,
+    user_id integer,
     first_name character varying(100) NOT NULL,
     last_name character varying(100) NOT NULL,
     username character varying(100) NOT NULL,
@@ -201,7 +231,6 @@ CREATE TABLE public.freelancers (
 ALTER TABLE public.freelancers OWNER TO postgres;
 
 --
--- TOC entry 231 (class 1259 OID 16498)
 -- Name: freelancers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -217,8 +246,6 @@ CREATE SEQUENCE public.freelancers_id_seq
 ALTER SEQUENCE public.freelancers_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5221 (class 0 OID 0)
--- Dependencies: 231
 -- Name: freelancers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -226,7 +253,6 @@ ALTER SEQUENCE public.freelancers_id_seq OWNED BY public.freelancers.id;
 
 
 --
--- TOC entry 238 (class 1259 OID 16570)
 -- Name: order_items; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -245,7 +271,6 @@ CREATE TABLE public.order_items (
 ALTER TABLE public.order_items OWNER TO postgres;
 
 --
--- TOC entry 237 (class 1259 OID 16569)
 -- Name: order_items_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -261,8 +286,6 @@ CREATE SEQUENCE public.order_items_id_seq
 ALTER SEQUENCE public.order_items_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5222 (class 0 OID 0)
--- Dependencies: 237
 -- Name: order_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -270,7 +293,6 @@ ALTER SEQUENCE public.order_items_id_seq OWNED BY public.order_items.id;
 
 
 --
--- TOC entry 224 (class 1259 OID 16428)
 -- Name: orders; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -292,7 +314,6 @@ CREATE TABLE public.orders (
 ALTER TABLE public.orders OWNER TO postgres;
 
 --
--- TOC entry 223 (class 1259 OID 16427)
 -- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -308,8 +329,6 @@ CREATE SEQUENCE public.orders_id_seq
 ALTER SEQUENCE public.orders_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5223 (class 0 OID 0)
--- Dependencies: 223
 -- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -317,7 +336,6 @@ ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
 
 
 --
--- TOC entry 234 (class 1259 OID 16521)
 -- Name: products; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -352,7 +370,6 @@ CREATE TABLE public.products (
 ALTER TABLE public.products OWNER TO postgres;
 
 --
--- TOC entry 233 (class 1259 OID 16520)
 -- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -368,8 +385,6 @@ CREATE SEQUENCE public.products_id_seq
 ALTER SEQUENCE public.products_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5224 (class 0 OID 0)
--- Dependencies: 233
 -- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -377,7 +392,6 @@ ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
 
 
 --
--- TOC entry 246 (class 1259 OID 16669)
 -- Name: quotation_proposals; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -395,7 +409,6 @@ CREATE TABLE public.quotation_proposals (
 ALTER TABLE public.quotation_proposals OWNER TO postgres;
 
 --
--- TOC entry 245 (class 1259 OID 16668)
 -- Name: quotation_proposals_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -411,8 +424,6 @@ CREATE SEQUENCE public.quotation_proposals_id_seq
 ALTER SEQUENCE public.quotation_proposals_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5225 (class 0 OID 0)
--- Dependencies: 245
 -- Name: quotation_proposals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -420,7 +431,6 @@ ALTER SEQUENCE public.quotation_proposals_id_seq OWNED BY public.quotation_propo
 
 
 --
--- TOC entry 242 (class 1259 OID 16613)
 -- Name: quotations; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -439,15 +449,13 @@ CREATE TABLE public.quotations (
     status character varying(50),
     selected_proposal_id integer,
     created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone,
-    user_id integer
+    updated_at timestamp with time zone
 );
 
 
 ALTER TABLE public.quotations OWNER TO postgres;
 
 --
--- TOC entry 241 (class 1259 OID 16612)
 -- Name: quotations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -463,8 +471,6 @@ CREATE SEQUENCE public.quotations_id_seq
 ALTER SEQUENCE public.quotations_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5226 (class 0 OID 0)
--- Dependencies: 241
 -- Name: quotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -472,7 +478,6 @@ ALTER SEQUENCE public.quotations_id_seq OWNED BY public.quotations.id;
 
 
 --
--- TOC entry 244 (class 1259 OID 16638)
 -- Name: ratings; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -491,7 +496,6 @@ CREATE TABLE public.ratings (
 ALTER TABLE public.ratings OWNER TO postgres;
 
 --
--- TOC entry 243 (class 1259 OID 16637)
 -- Name: ratings_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -507,8 +511,6 @@ CREATE SEQUENCE public.ratings_id_seq
 ALTER SEQUENCE public.ratings_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5227 (class 0 OID 0)
--- Dependencies: 243
 -- Name: ratings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -516,7 +518,6 @@ ALTER SEQUENCE public.ratings_id_seq OWNED BY public.ratings.id;
 
 
 --
--- TOC entry 236 (class 1259 OID 16548)
 -- Name: services; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -531,18 +532,17 @@ CREATE TABLE public.services (
     category_id integer,
     image_url text,
     slug character varying NOT NULL,
-    rating double precision DEFAULT 0.0,
-    num_ratings integer DEFAULT 0,
-    price_unit character varying DEFAULT 'intervention'::character varying,
+    price_unit character varying,
     features json,
-    process json
+    process json,
+    rating double precision,
+    num_ratings integer
 );
 
 
 ALTER TABLE public.services OWNER TO postgres;
 
 --
--- TOC entry 235 (class 1259 OID 16547)
 -- Name: services_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -558,8 +558,6 @@ CREATE SEQUENCE public.services_id_seq
 ALTER SEQUENCE public.services_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5228 (class 0 OID 0)
--- Dependencies: 235
 -- Name: services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -567,7 +565,6 @@ ALTER SEQUENCE public.services_id_seq OWNED BY public.services.id;
 
 
 --
--- TOC entry 248 (class 1259 OID 16697)
 -- Name: settings; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -587,7 +584,6 @@ CREATE TABLE public.settings (
 ALTER TABLE public.settings OWNER TO postgres;
 
 --
--- TOC entry 247 (class 1259 OID 16696)
 -- Name: settings_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -603,8 +599,6 @@ CREATE SEQUENCE public.settings_id_seq
 ALTER SEQUENCE public.settings_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5229 (class 0 OID 0)
--- Dependencies: 247
 -- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -612,7 +606,6 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
--- TOC entry 230 (class 1259 OID 16482)
 -- Name: site; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -634,7 +627,6 @@ CREATE TABLE public.site (
 ALTER TABLE public.site OWNER TO postgres;
 
 --
--- TOC entry 229 (class 1259 OID 16481)
 -- Name: site_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -650,8 +642,6 @@ CREATE SEQUENCE public.site_id_seq
 ALTER SEQUENCE public.site_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5230 (class 0 OID 0)
--- Dependencies: 229
 -- Name: site_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -659,7 +649,6 @@ ALTER SEQUENCE public.site_id_seq OWNED BY public.site.id;
 
 
 --
--- TOC entry 228 (class 1259 OID 16463)
 -- Name: suppliers; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -689,7 +678,6 @@ CREATE TABLE public.suppliers (
 ALTER TABLE public.suppliers OWNER TO postgres;
 
 --
--- TOC entry 227 (class 1259 OID 16462)
 -- Name: suppliers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -705,8 +693,6 @@ CREATE SEQUENCE public.suppliers_id_seq
 ALTER SEQUENCE public.suppliers_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5231 (class 0 OID 0)
--- Dependencies: 227
 -- Name: suppliers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -714,26 +700,24 @@ ALTER SEQUENCE public.suppliers_id_seq OWNED BY public.suppliers.id;
 
 
 --
--- TOC entry 220 (class 1259 OID 16400)
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.users (
     id integer NOT NULL,
     username character varying,
-    email character varying NOT NULL,
-    hashed_password character varying NOT NULL,
     full_name character varying,
+    email character varying NOT NULL,
     phone character varying,
-    role character varying DEFAULT 'client'::character varying,
-    two_factor_enabled integer DEFAULT 0
+    hashed_password character varying NOT NULL,
+    role character varying,
+    two_factor_enabled integer
 );
 
 
 ALTER TABLE public.users OWNER TO postgres;
 
 --
--- TOC entry 219 (class 1259 OID 16399)
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -749,8 +733,6 @@ CREATE SEQUENCE public.users_id_seq
 ALTER SEQUENCE public.users_id_seq OWNER TO postgres;
 
 --
--- TOC entry 5232 (class 0 OID 0)
--- Dependencies: 219
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -758,7 +740,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- TOC entry 4946 (class 2604 OID 16596)
+-- Name: blogs id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blogs ALTER COLUMN id SET DEFAULT nextval('public.blogs_id_seq'::regclass);
+
+
+--
 -- Name: cart_items id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -766,7 +754,6 @@ ALTER TABLE ONLY public.cart_items ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
--- TOC entry 4932 (class 2604 OID 16417)
 -- Name: categories id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -774,7 +761,6 @@ ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
--- TOC entry 4934 (class 2604 OID 16449)
 -- Name: categories_service id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -782,7 +768,6 @@ ALTER TABLE ONLY public.categories_service ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- TOC entry 4938 (class 2604 OID 16502)
 -- Name: freelancers id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -790,7 +775,6 @@ ALTER TABLE ONLY public.freelancers ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 4945 (class 2604 OID 16573)
 -- Name: order_items id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -798,7 +782,6 @@ ALTER TABLE ONLY public.order_items ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 4933 (class 2604 OID 16431)
 -- Name: orders id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -806,7 +789,6 @@ ALTER TABLE ONLY public.orders ALTER COLUMN id SET DEFAULT nextval('public.order
 
 
 --
--- TOC entry 4940 (class 2604 OID 16524)
 -- Name: products id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -814,7 +796,6 @@ ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
--- TOC entry 4951 (class 2604 OID 16672)
 -- Name: quotation_proposals id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -822,7 +803,6 @@ ALTER TABLE ONLY public.quotation_proposals ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
--- TOC entry 4947 (class 2604 OID 16616)
 -- Name: quotations id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -830,7 +810,6 @@ ALTER TABLE ONLY public.quotations ALTER COLUMN id SET DEFAULT nextval('public.q
 
 
 --
--- TOC entry 4949 (class 2604 OID 16641)
 -- Name: ratings id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -838,7 +817,6 @@ ALTER TABLE ONLY public.ratings ALTER COLUMN id SET DEFAULT nextval('public.rati
 
 
 --
--- TOC entry 4941 (class 2604 OID 16551)
 -- Name: services id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -846,7 +824,6 @@ ALTER TABLE ONLY public.services ALTER COLUMN id SET DEFAULT nextval('public.ser
 
 
 --
--- TOC entry 4953 (class 2604 OID 16700)
 -- Name: settings id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -854,7 +831,6 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 
 
 --
--- TOC entry 4937 (class 2604 OID 16485)
 -- Name: site id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -862,7 +838,6 @@ ALTER TABLE ONLY public.site ALTER COLUMN id SET DEFAULT nextval('public.site_id
 
 
 --
--- TOC entry 4935 (class 2604 OID 16466)
 -- Name: suppliers id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -870,7 +845,6 @@ ALTER TABLE ONLY public.suppliers ALTER COLUMN id SET DEFAULT nextval('public.su
 
 
 --
--- TOC entry 4929 (class 2604 OID 16403)
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -878,8 +852,20 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- TOC entry 5204 (class 0 OID 16593)
--- Dependencies: 240
+-- Data for Name: blogs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.blogs (id, title, content, category, author, image_url, slug, views, status, created_at, updated_at, excerpt, read_time) FROM stdin;
+3	Maintenance de la plomberie : conseils essentiels pour éviter les dégâts d’eau	<p>\nUne plomberie bien entretenue est essentielle pour garantir le confort de votre logement\net prévenir les dégâts d’eau. Les fuites, les bouchons ou l’usure des installations peuvent\nentraîner des réparations coûteuses si elles ne sont pas détectées à temps. Voici les bonnes\npratiques pour maintenir votre système de plomberie en excellent état.\n</p>\n\n<h2>🔧 L’importance de la maintenance régulière</h2>\n<p>\nLa maintenance de la plomberie permet d’anticiper les problèmes avant qu’ils ne deviennent\ngraves. Des contrôles réguliers vous aident à prolonger la durée de vie de vos installations\net à éviter des interventions d’urgence coûteuses.\n</p>\n\n<h2>💧 Vérifiez régulièrement les fuites</h2>\n<p>\nInspectez fréquemment les robinets, les tuyaux et les raccords visibles. Une petite fuite,\nmême minime, peut rapidement se transformer en dégât des eaux important et endommager\nles murs, les sols et les meubles.\n</p>\n\n<h2>🚿 Nettoyage des siphons</h2>\n<p>\nLes siphons des éviers, lavabos et douches doivent être nettoyés régulièrement pour éviter\nles bouchons et les mauvaises odeurs. Un entretien simple permet de garantir un bon\nécoulement de l’eau et d’éviter les interventions lourdes.\n</p>\n\n<h2>🛡️ Prévention : la clé d’une plomberie durable</h2>\n<p>\nAdopter de bons réflexes au quotidien, comme éviter de jeter des déchets dans les canalisations\net surveiller la pression de l’eau, contribue à maintenir une plomberie saine et fonctionnelle.\n</p>\n\n<h2>👷‍♂️ Faites appel à Ween Maintenance</h2>\n<p>\nChez <strong>Ween Maintenance</strong>, nous proposons des services de maintenance et de dépannage\nen plomberie partout en Tunisie. Nos experts vous accompagnent pour prévenir les dégâts\nd’eau et assurer le bon fonctionnement de vos installations.\n</p>\n\n<p>\n<strong>Un doute ou une fuite ?</strong><br>\n<a href="/services/request">Demandez une intervention plomberie dès maintenant</a>\n</p>\n	Plomberie	Ween Maintenance	💧	maintenance-plomberie-eviter-degats-eau	0	Publié	2026-02-04 20:29:58.217439+00	2026-02-05 16:16:03.539968+00	Découvrez comment maintenir votre système de plomberie en excellent état et éviter les dégâts d’eau grâce à des gestes simples et efficaces recommandés par des professionnels.	6 min
+7	Rénovation électrique : guide complet pour une installation sûre et conforme	<p>\nLa rénovation de l’installation électrique est une étape essentielle pour garantir la sécurité\nde votre logement. Une installation ancienne ou non conforme peut provoquer des pannes,\ndes électrocutions ou des incendies. Ce guide vous aide à comprendre les étapes clés pour\nrénover votre électricité en toute sérénité.\n</p>\n\n<h2>🔍 Diagnostic de l’installation existante</h2>\n<p>\nAvant toute rénovation, il est indispensable de réaliser un diagnostic électrique complet.\nCe contrôle, effectué par un professionnel, permet d’identifier les défauts, les risques\npotentiels et les éléments à remplacer pour respecter les normes de sécurité.\n</p>\n\n<h2>📝 Planification des besoins actuels et futurs</h2>\n<p>\nLa planification est une étape souvent négligée, pourtant essentielle. Pensez à vos besoins\nactuels mais aussi futurs :\n</p>\n<ul>\n  <li>Ajout de prises électriques</li>\n  <li>Installation de systèmes domotiques</li>\n  <li>Borne de recharge pour véhicule électrique</li>\n  <li>Équipements énergivores supplémentaires</li>\n</ul>\n<p>\nUne bonne anticipation évite des travaux coûteux à long terme.\n</p>\n\n<h2>⚡ Mise aux normes et sécurisation</h2>\n<p>\nLa rénovation électrique implique la mise aux normes du tableau électrique, l’installation\nde disjoncteurs différentiels, une mise à la terre efficace et l’utilisation de matériaux\ncertifiés. Ces éléments garantissent une protection optimale des personnes et des biens.\n</p>\n\n<h2>🛠️ Pourquoi confier votre rénovation électrique à un professionnel ?</h2>\n<p>\nLes travaux électriques nécessitent un savoir-faire spécifique. Faire appel à un professionnel\npermet d’assurer :\n</p>\n<ul>\n  <li>Une installation conforme aux normes en vigueur</li>\n  <li>Une sécurité maximale</li>\n  <li>Un gain de temps et de tranquillité</li>\n  <li>Des conseils personnalisés</li>\n</ul>\n\n<h2>👷‍♂️ Ween Maintenance, votre partenaire sécurité</h2>\n<p>\nChez <strong>Ween Maintenance</strong>, nous réalisons des rénovations électriques complètes,\ndu diagnostic à la mise en service, partout en Tunisie. Nos experts vous accompagnent pour\nsécuriser et moderniser votre installation.\n</p>\n\n<p>\n<strong>Besoin d’un diagnostic ou d’une rénovation électrique ?</strong><br>\n<a href="/services/request">Demandez une intervention dès maintenant</a>\n</p>\n	Électricité	Ween Maintenance	🔌	renovation-installation-electrique-guide-complet	0	Publié	2026-02-04 20:29:58.217439+00	2026-02-05 16:12:14.538493+00	Guide complet pour rénover l’installation électrique de votre domicile en toute sécurité. Diagnostic, planification et bonnes pratiques pour une installation conforme et durable.	10 min
+4	Sécurité électrique : les normes essentielles pour protéger votre maison	<p>\nL’électricité est indispensable au quotidien, mais une installation électrique non conforme\nreprésente un réel danger. En Tunisie, de nombreux accidents domestiques sont causés par des\nproblèmes électriques évitables. Respecter les normes de sécurité électrique permet de protéger\nvotre maison, votre famille et vos appareils.\n</p>\n\n<h2>⚡ Normes fondamentales de sécurité électrique</h2>\n<p>\nLa sécurité électrique n’est jamais une option. Une installation conforme réduit considérablement\nles risques d’électrocution et d’incendie. Les normes exigent notamment :\n</p>\n<ul>\n  <li>Une mise à la terre efficace</li>\n  <li>Des câbles adaptés à la puissance utilisée</li>\n  <li>Des protections contre les surcharges</li>\n  <li>Un tableau électrique bien organisé et identifié</li>\n</ul>\n\n<h2>🔌 Le tableau électrique : le cœur de votre installation</h2>\n<p>\nLe tableau électrique est l’élément central de votre installation. Il doit obligatoirement être\néquipé de disjoncteurs différentiels afin de couper automatiquement le courant en cas de danger.\nUn tableau ancien ou mal entretenu augmente fortement les risques électriques.\n</p>\n\n<p>\nSi votre logement a plus de 10 ans, un contrôle du tableau électrique par un professionnel est\nfortement recommandé.\n</p>\n\n<h2>⚠️ Les dangers du bricolage électrique</h2>\n<p>\nLe bricolage électrique est l’une des principales causes d’accidents domestiques. Intervenir sur\nune installation sous tension peut entraîner des blessures graves, voire mortelles.\n</p>\n<p>\nAvant toute intervention :\n</p>\n<ul>\n  <li>Coupez toujours le courant au disjoncteur principal</li>\n  <li>N’utilisez jamais du matériel de mauvaise qualité</li>\n  <li>Ne surchargez pas les prises et multiprises</li>\n</ul>\n\n<h2>🧯 Bonnes pratiques pour une sécurité durable</h2>\n<p>\nPour garantir une sécurité électrique optimale :\n</p>\n<ul>\n  <li>Faites vérifier votre installation régulièrement</li>\n  <li>Remplacez les équipements vétustes</li>\n  <li>Installez des protections modernes</li>\n  <li>Faites appel à un électricien professionnel</li>\n</ul>\n\n<h2>👷‍♂️ Pourquoi faire confiance à Ween Maintenance ?</h2>\n<p>\nWeen Maintenance vous accompagne pour tous vos besoins en électricité :\n</p>\n<ul>\n  <li>Diagnostic électrique complet</li>\n  <li>Mise aux normes électriques</li>\n  <li>Dépannage rapide et sécurisé</li>\n  <li>Interventions partout en Tunisie</li>\n</ul>\n\n<p>\n<strong>Besoin d’un contrôle ou d’une intervention électrique ?</strong><br>\n<a href="/services/request">Demandez un service électrique dès maintenant</a>\n</p>	Électricité	Ween Maintenance	⚡	securite-electrique-normes-essentielles-maison	0	Publié	2026-02-04 20:29:58.217439+00	2026-02-05 16:14:08.335989+00	Les normes de sécurité électrique sont essentielles pour protéger votre maison, votre famille et vos équipements. Découvrez les bonnes pratiques et les erreurs à éviter pour une installation électrique sûre et conforme en Tunisie.	7 min
+6	Installation d’une chaudière : les erreurs à éviter absolument	<p>\nL’installation d’une chaudière est une étape cruciale pour garantir le confort thermique\net la sécurité de votre logement. Une mauvaise installation peut entraîner une surconsommation\nd’énergie, des pannes fréquentes et des risques pour la sécurité. Voici les erreurs les plus\ncourantes à éviter lors de l’installation d’une chaudière moderne.\n</p>\n\n<h2>⚠️ Choisir une chaudière mal adaptée</h2>\n<p>\nUne chaudière surdimensionnée ou sous-dimensionnée entraîne une consommation excessive\net une usure prématurée. Il est essentiel de choisir un modèle adapté à la surface du logement,\nau nombre d’occupants et au niveau d’isolation.\n</p>\n\n<h2>🔧 Négliger l’installation professionnelle</h2>\n<p>\nInstaller une chaudière sans l’intervention d’un professionnel qualifié est une erreur\nfréquente. Une installation incorrecte peut provoquer des fuites, un mauvais tirage ou un\nfonctionnement inefficace de l’appareil.\n</p>\n\n<h2>💨 Mauvaise ventilation du local</h2>\n<p>\nUne chaudière a besoin d’une ventilation adéquate pour fonctionner en toute sécurité.\nUn manque d’aération peut entraîner une accumulation de gaz dangereux et réduire les\nperformances de l’appareil.\n</p>\n\n<h2>🧯 Oublier les dispositifs de sécurité</h2>\n<p>\nSoupapes de sécurité, détecteurs de gaz et systèmes de coupure automatique sont indispensables.\nLeur absence expose le logement à des risques graves.\n</p>\n\n<h2>🛠️ Négliger l’entretien régulier</h2>\n<p>\nMême une chaudière moderne nécessite un entretien périodique. Un entretien régulier permet\nd’optimiser les performances, de réduire la consommation d’énergie et de prolonger la durée\nde vie de l’équipement.\n</p>\n\n<h2>👷‍♂️ Pourquoi faire appel à Ween Maintenance ?</h2>\n<p>\nChez <strong>Ween Maintenance</strong>, nous assurons :\n</p>\n<ul>\n  <li>Installation professionnelle de chaudières</li>\n  <li>Conseils personnalisés selon votre logement</li>\n  <li>Mise en service sécurisée</li>\n  <li>Entretien et dépannage rapide</li>\n</ul>\n\n<p>\n<strong>Besoin d’une installation fiable et sécurisée ?</strong><br>\n<a href="/services/request">Demandez votre installation de chaudière dès maintenant</a>\n</p>\n	Chaudières	Ween Maintenance	🔥⚠️	installation-chaudiere-erreurs-a-eviter	0	Publié	2026-02-04 20:29:58.217439+00	2026-02-05 16:12:54.537103+00	Évitez les pièges et les erreurs fréquentes lors de l’installation d’une chaudière moderne. Découvrez les bonnes pratiques pour une installation sécurisée, performante et durable.	9 min
+2	Guide complet d'installation de chauffage	\n                    <h2>Introduction</h2>\n                    <p>L'installation d'un système de chauffage est une étape cruciale pour le confort de votre maison. Ce guide vous accompagne à travers les étapes essentielles.</p>\n                    <h2>Étapes de préparation</h2>\n                    <p>Avant de commencer, assurez-vous d'avoir réalisé un bilan thermique de votre habitation. Cela vous permettra de choisir la puissance adaptée.</p>\n                    <h2>Choix du système</h2>\n                    <p>Chaudière gaz, pompe à chaleur ou radiateurs électriques ? Le choix dépend de votre isolation, de votre budget et de vos préférences écologiques.</p>\n                    <h2>Installation et Sécurité</h2>\n                    <p>Faites toujours appel à un professionnel certifié pour l'installation. Les normes de sécurité, notamment pour le gaz et l'électricité, sont strictes.</p>\n                    <h2>Conclusion</h2>\n                    <p>Une bonne installation garantit performance et économies d'énergie sur le long terme.</p>\n                    	Chauffage	Ween Maintenance	🔥	guide-complet-dinstallation-de-chauffage	0	Publié	2026-02-04 20:29:58.217439+00	2026-02-05 16:13:35.732868+00	Apprenez les étapes essentielles pour installer un système de chauffage professionnel dans votre maison.	8 min
+5	Comment réduire votre consommation d’énergie grâce au chauffage intelligent	<p>\nLe chauffage représente une part importante de la consommation d’énergie dans les foyers.\nUne mauvaise utilisation peut rapidement faire grimper la facture. Heureusement, quelques\najustements simples permettent de réaliser des économies significatives tout en conservant\nun excellent confort thermique.\n</p>\n\n<h2>🌡️ Programmation du chauffage</h2>\n<p>\nL’installation d’un thermostat programmable est l’une des solutions les plus efficaces pour\nréduire votre consommation d’énergie. En programmant la baisse de température lorsque vous\nêtes absent ou pendant la nuit, vous pouvez réduire votre facture de chauffage jusqu’à\n<strong>15&nbsp;%</strong>.\n</p>\n<p>\nUn chauffage intelligent s’adapte à votre rythme de vie et évite de chauffer inutilement\nles pièces inoccupées.\n</p>\n\n<h2>🏠 Température idéale pour chaque pièce</h2>\n<p>\nMaintenir une température adaptée est essentiel pour le confort et la santé :\n</p>\n<ul>\n  <li><strong>19&nbsp;°C</strong> dans les pièces à vivre</li>\n  <li><strong>16&nbsp;°C</strong> dans les chambres</li>\n</ul>\n<p>\nChaque degré supplémentaire augmente la consommation d’énergie d’environ 7&nbsp;%. Trouver\nle bon équilibre permet donc de réduire les coûts sans sacrifier le bien-être.\n</p>\n\n<h2>💡 Astuces pour optimiser votre chauffage</h2>\n<ul>\n  <li>Fermez les volets la nuit pour conserver la chaleur</li>\n  <li>Entretenez régulièrement votre système de chauffage</li>\n  <li>Évitez de couvrir les radiateurs</li>\n  <li>Améliorez l’isolation de votre logement</li>\n</ul>\n\n<h2>👷‍♂️ Faites appel à un professionnel</h2>\n<p>\nUn diagnostic énergétique réalisé par un professionnel permet d’identifier les sources de\ndéperdition de chaleur et d’optimiser votre installation. Chez <strong>Ween Maintenance</strong>,\nnous vous accompagnons pour améliorer l’efficacité énergétique de votre logement.\n</p>\n\n<p>\n<a href="/services/request">Demandez un diagnostic ou une intervention chauffage</a>\n</p>\n	Chauffage	Mariem Khamis	🔥🌡️💡	reduction-consommation-energie-chauffage-intelligent	0	Publié	2026-02-04 20:29:58.217439+00	2026-02-05 16:14:57.058521+00	Réduisez votre consommation d’énergie et votre facture de chauffage en utilisant intelligemment votre système de chauffage. Découvrez les bonnes pratiques pour un confort optimal et des économies durables.	5 min
+\.
+
+
+--
 -- Data for Name: cart_items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -888,8 +874,6 @@ COPY public.cart_items (id, user_id, product_id, quantity) FROM stdin;
 
 
 --
--- TOC entry 5186 (class 0 OID 16414)
--- Dependencies: 222
 -- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -901,133 +885,110 @@ COPY public.categories (id, name, description, image_url) FROM stdin;
 
 
 --
--- TOC entry 5190 (class 0 OID 16446)
--- Dependencies: 226
 -- Data for Name: categories_service; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.categories_service (id, name, description, image_url, slug) FROM stdin;
-1	Réparation	Services de réparation	\N	reparation
-2	Installation	Services d'installation	\N	installation
+1	Plomberie	Plomberie	💧	plomberie
+2	Électricité	Électricité	⚡	électricité
+3	Industrue	Industrue	🏭	industrue
+4	contrôle et securité industrielles	contrôle réglementaires périodiques de securié industrielles	🛡️	contrôle-et-securité-industrielles-a-tunis
 \.
 
 
 --
--- TOC entry 5196 (class 0 OID 16499)
--- Dependencies: 232
 -- Data for Name: freelancers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.freelancers (id, first_name, last_name, username, email, tel, website, title, bio, skills, services, experience_years, hourly_rate, address, city, country, matricule_fiscale, cin, verified, is_active, rating, reviews_count, avatar, cover_image, notes, blocked_reason, created_at, updated_at) FROM stdin;
-1	Mario	Rossi	mario_plumber	mario@example.com	20123456	\N	Plombier Expert	10 ans d'expérience en plomberie résidentielle.	["Plomberie", "Chauffage"]	["D\\u00e9pannage", "Installation sanitaire"]	0	\N	\N	Tunis	Tunisia	\N	\N	t	t	4.9	15	\N	\N	\N	\N	2026-01-27 20:26:22.571347+01	\N
+COPY public.freelancers (id, user_id, first_name, last_name, username, email, tel, website, title, bio, skills, services, experience_years, hourly_rate, address, city, country, matricule_fiscale, cin, verified, is_active, rating, reviews_count, avatar, cover_image, notes, blocked_reason, created_at, updated_at) FROM stdin;
+2	\N	salah	zaafrani	salah_zaafrani	salah@gmail.com	275553981		Electricien	dqsdqsd	["Electricit\\u00e9"]	["Installation"]	5	50	monastir	Benbla	Tunisia			t	t	0	0	\N	\N	khadem		2026-02-05 21:38:30.914158+00	2026-02-05 21:49:23.558707+00
+3	\N	kamel	salah	kamel-salah	kamel@gmail.com	22245539		plembier expert		[]	["electricit\\u00e9"]	0	\N			Tunisia		55445	t	t	0	0					2026-02-06 12:30:28.570946+00	2026-02-06 12:30:39.178206+00
 \.
 
 
 --
--- TOC entry 5202 (class 0 OID 16570)
--- Dependencies: 238
 -- Data for Name: order_items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.order_items (id, order_id, product_id, quantity, price, name, color, size) FROM stdin;
+5	5	3	1	59.99	\N	\N	\N
+6	6	4	1	199.99	\N	\N	\N
+7	6	3	1	59.99	\N	\N	\N
+8	6	2	1	89.5	\N	\N	\N
 \.
 
 
 --
--- TOC entry 5188 (class 0 OID 16428)
--- Dependencies: 224
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.orders (id, total_amount, status, created_at, username, email, telephone, location, payment_method, payed, code) FROM stdin;
+5	83.38810000000001	PENDING	2026-02-07 17:10:18.512932	Admin Wajih	wajihsayes@gmail.com	27553981	rue el yassamin, benbla, Tunis 5021	delivery	check	74109-76476-23615-11928
+6	415.88120000000004	PENDING	2026-02-07 17:20:43.824355	Admin Wajih	wajihsayes@gmail.com	27553981	rue el yassamin, benbla, Tunis 5021	delivery	check	47387-71360-35220-22629
 \.
 
 
 --
--- TOC entry 5198 (class 0 OID 16521)
--- Dependencies: 234
 -- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.products (id, name, description, price, discounted_price, stock_quantity, category_id, image_url, image2_url, image3_url, image4_url, sizes, colors, materials, care, features, sku, promo, buzzent, rating, num_ratings, in_stock, slug, supplier_id) FROM stdin;
-2	Tuyauterie Cuivre 22mm	Tuyau en cuivre haute qualité pour plomberie.	89.5	\N	100	2	tuyau_cuivre.jpg	\N	\N	\N	\N	\N	\N	\N	\N	\N	f	\N	4.9	95	t	tuyauterie-cuivre-22mm	\N
-3	Câble Électrique 2.5mm²	Rouleau de 100m de câble électrique standard.	59.99	\N	200	3	cable_elec.jpg	\N	\N	\N	\N	\N	\N	\N	\N	\N	f	\N	4.7	156	t	cable-electrique-2-5mm	\N
-4	Thermostat Intelligent WiFi	Contrôlez votre chauffage depuis votre smartphone.	199.99	\N	30	1	thermostat_wifi.jpg	\N	\N	\N	\N	\N	\N	\N	\N	\N	f	\N	4.9	203	t	thermostat-intelligent-wifi	\N
+2	Tuyauterie Cuivre 22mm	Tuyau en cuivre haute qualité pour plomberie.	89.5	\N	99	2	https://www.richardson.fr/files/richardson/styles/1184x608_resize/public/media/product_categories/2021-10/N2-tube-cuivre-et-laiton.jpg?itok=ai6Mo2rI	\N	\N	\N	\N	\N	\N	\N	\N	\N	f	\N	4.9	95	t	tuyauterie-cuivre-22mm	\N
+3	Câble Électrique 2.5mm²	Rouleau de 100m de câble électrique standard.	59.99	\N	197	3	https://cdn.manomano.com/rs-pro-conduit-section-4-mm-100m-450-750-v-32-a-bleu-h07v-u-h07v-u-prix-pour-bobine-de-100-metres-P-1801662-11545406_1.jpg	\N	\N	\N	\N	\N	\N	\N	\N	\N	f	\N	4.7	156	t	câble-électrique-2.5mm²	\N
+4	Thermostat Intelligent WiFi	Contrôlez votre chauffage depuis votre smartphone.	199.99	\N	24	1	https://m.media-amazon.com/images/I/614D92e-JVL._AC_SL1500_.jpg	\N	\N	\N	\N	\N	\N	\N	\N	\N	f	\N	4.9	203	t	thermostat-intelligent-wifi	\N
 \.
 
 
 --
--- TOC entry 5210 (class 0 OID 16669)
--- Dependencies: 246
 -- Data for Name: quotation_proposals; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.quotation_proposals (id, quotation_id, freelancer_id, price, message, status, created_at) FROM stdin;
+1	1	2	0	Invited by Admin	PENDING	2026-02-06 12:22:07.108839+00
+2	1	3	0	Invited by Admin	PENDING	2026-02-06 12:30:48.392008+00
 \.
 
 
 --
--- TOC entry 5206 (class 0 OID 16613)
--- Dependencies: 242
 -- Data for Name: quotations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.quotations (id, service_id, first_name, last_name, email, phone, address, city, postal_code, description, preferred_timeline, created_at) FROM stdin;
+COPY public.quotations (id, service_id, first_name, last_name, email, phone, address, city, postal_code, description, preferred_timeline, status, selected_proposal_id, created_at, updated_at) FROM stdin;
+1	1	baccar	sahbi	wajihsayes@gmail.com	27553981	tunise	monastir	1000	wajihsayes@gmail.com	Urgent (1-2 jours)	OPEN	\N	2026-02-06 12:14:41.964761+00	2026-02-06 12:30:48.392008+00
 \.
 
 
 --
--- TOC entry 5208 (class 0 OID 16638)
--- Dependencies: 244
 -- Data for Name: ratings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.ratings (id, user_id, rating, comment, service_id, product_id, created_at) FROM stdin;
-5	1	5	Excellent service, très professionnel.	2	\N	2026-01-28 21:58:37.480902+01
-6	1	5	Ponctuel et très compétent.	2	\N	2026-01-28 21:58:37.480902+01
-7	1	4	Travail bien fait, propre et soigné.	2	\N	2026-01-28 21:58:37.480902+01
-8	1	5	Ponctuel et très compétent.	2	\N	2026-01-28 21:58:37.480902+01
-9	1	4	Satisfait du résultat, prix correct.	2	\N	2026-01-28 21:58:37.480902+01
-10	1	5	Intervention rapide et efficace. Je recommande !	1	\N	2026-01-28 21:58:37.480902+01
-11	1	5	Intervention rapide et efficace. Je recommande !	1	\N	2026-01-28 21:58:37.480902+01
-12	1	5	Excellent service, très professionnel.	1	\N	2026-01-28 21:58:37.480902+01
-13	1	5	Intervention rapide et efficace. Je recommande !	1	\N	2026-01-28 21:58:37.480902+01
-14	1	4	Satisfait du résultat, prix correct.	1	\N	2026-01-28 21:58:37.480902+01
-15	1	5	Intervention rapide et efficace. Je recommande !	3	\N	2026-01-28 21:58:37.480902+01
-16	1	5	Intervention rapide et efficace. Je recommande !	3	\N	2026-01-28 21:58:37.480902+01
-17	1	5	Excellent service, très professionnel.	3	\N	2026-01-28 21:58:37.480902+01
-18	1	5	a7sen service	3	\N	2026-01-28 22:09:33.478735+01
-19	2	5	tayara	1	\N	2026-01-28 22:47:04.90018+01
+20	1	5	TOP	1	\N	2026-02-03 20:54:24.338452+00
 \.
 
 
 --
--- TOC entry 5200 (class 0 OID 16548)
--- Dependencies: 236
 -- Data for Name: services; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.services (id, name, description, price, specialties, disponiblity, "moyDuration", category_id, image_url, slug, rating, num_ratings, price_unit, features, process) FROM stdin;
-1	Plomberie d'Urgence	Intervention rapide pour fuites et débouchage.	50	Fuites, Débouchage	Lun-Dim 7h-20h	1	1	💧	plomberie-urgence	4.8	5	intervention	\N	\N
-2	Installation Électrique	Installation complète ou rénovation électrique.	100	Rénovation, Neuf	Lun-Dim 7h-20h	5	2	⚡	installation-electrique	4.6	5	intervention	\N	\N
-3	Maintenance Chaudière	Entretien annuel et dépannage chaudière.	80	Gaz, Fioul	Lun-Dim 7h-20h	2	1	🔧	maintenance-chaudiere	5	3	intervention	\N	\N
+COPY public.services (id, name, description, price, specialties, disponiblity, "moyDuration", category_id, image_url, slug, price_unit, features, process, rating, num_ratings) FROM stdin;
+1	Plomberie d'Urgence	Intervention rapide pour fuites et débouchage.	50	Fuites, Débouchage	Lun-Dim 7h-20h	1	1	💧	plomberie-urgence	intervention	[]	[]	4.8	5
+2	Installation Électrique	Installation complète ou rénovation électrique.	100	Rénovation, Neuf	Lun-Dim 7h-20h	5	3	⚡	installation-electrique	intervention	[]	[]	4.6	5
+3	Entretien annuel et dépannage chaudière	Service complet d’entretien annuel et dépannage des chaudières, garantissant leur fonctionnement optimal, la sécurité des installations et la réduction des risques de panne. Inclut nettoyage, vérification des composants et interventions correctives si nécessaire.	120	Entretien chaudière, dépannage chaudière, maintenance préventive, sécurité industrielle, vérification équipements	Lun-Dim 7h-20h	3	3	🔧	maintenance-chaudiere	intervention	[]	[{"step": 1, "title": "Prise de rendez-vous et \\u00e9valuation initiale", "description": ""}, {"step": 2, "title": "Inspection compl\\u00e8te de la chaudi\\u00e8re et des syst\\u00e8mes associ\\u00e9s", "description": ""}, {"step": 3, "title": "Nettoyage et maintenance des composants", "description": ""}, {"step": 4, "title": "D\\u00e9tection et r\\u00e9paration des pannes \\u00e9ventuelles", "description": ""}, {"step": 5, "title": "Test final, v\\u00e9rification de s\\u00e9curit\\u00e9 et remise du rapport", "description": ""}]	5	3
+4	Contrôle réglementaires périodiques de securié industrielles	Les contrôles réglementaires périodiques de sécurité industrielle assurent la conformité des installations, préviennent les accidents et garantissent la sécurité des employés et équipements.	300	contrôles réglementaires périodiques, inspectionet sécurité industrielle, conformité réglementaire, prévention des risques professionnels, contrôle des installations industrielles, audit de sécurité, maintenance industrielle, sécurité incendie, contrôle des installations électriques, équipements sous pression, protection des travailleurs	7j/7, 24h/24	1	4	🛡️	contrôle-réglementaires-périodiques-de-securié-industrielles	DT/heure	[]	[]	0	0
 \.
 
 
 --
--- TOC entry 5212 (class 0 OID 16697)
--- Dependencies: 248
 -- Data for Name: settings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.settings (id, store_name, email, phone, address, shipping_cost, free_shipping_threshold, tax_rate, currency) FROM stdin;
-1	Ween-Maintenance.tn	info@maintenance.tn	+216 27 553 981	Tunis, Tunisie	10	100	19	DT
+1	Ween-Maintenance.tn	info@ween-maintenance.tn	+216 27 553 981	Tunis, Tunisie	12	100	19	DT
 \.
 
 
 --
--- TOC entry 5194 (class 0 OID 16482)
--- Dependencies: 230
 -- Data for Name: site; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -1036,30 +997,33 @@ COPY public.site (id, name, email, phone, address, city, country, shipping_cost,
 
 
 --
--- TOC entry 5192 (class 0 OID 16463)
--- Dependencies: 228
 -- Data for Name: suppliers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.suppliers (id, owner_name, company_name, matricule_fiscale, forme_juridique, site, email, tel, main_category, services, address, city, country, verified, is_active, notes, blocked_reason, created_at, updated_at) FROM stdin;
+1	Samir	IMMI	dqsdsq	dqsdqs	dsqdqs	sdqdqs@gmail.com	275553981	Chaudeiere	["dsqdsqdqsq"]	dsqdsqdsq	dsqdqs	Tunisia	f	t	\N	\N	2026-02-05 13:13:58.903858+00	\N
 \.
 
 
 --
--- TOC entry 5184 (class 0 OID 16400)
--- Dependencies: 220
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (id, username, email, hashed_password, full_name, phone, role, two_factor_enabled) FROM stdin;
-1	wajihsayes@gmail.com	wajihsayes@gmail.com	$2b$12$XHUBJgUUjDqm7oCcM5vxLOJu2DvoIyyAFFQdF8K8BA27SCLEk73Mm	Admin Wajih	27553981	admin	0
-2	wajihsayes1@gmail.com	wajihsayes1@gmail.com	$2b$12$GNApVHPEOKxfndPujXQBw.Y5oxyNaZUxbi/crFHajuZB.IXbETkpO	Mohamed Essayes	27553981	client	0
+COPY public.users (id, username, full_name, email, phone, hashed_password, role, two_factor_enabled) FROM stdin;
+1	wajihsayes@gmail.com	Admin Wajih	wajihsayes@gmail.com	27553981	$2b$12$XHUBJgUUjDqm7oCcM5vxLOJu2DvoIyyAFFQdF8K8BA27SCLEk73Mm	admin	0
+2	wajihsayes1@gmail.com	Mohamed Essayes	wajihsayes1@gmail.com	27553981	$2b$12$GNApVHPEOKxfndPujXQBw.Y5oxyNaZUxbi/crFHajuZB.IXbETkpO	client	0
+3	wajihsayes11111@gmail.com	wajih client	wajihsayes11111@gmail.com	27553981	$2b$12$c1GjSB5YjddWj8KJHeMIn.RrzbqYLTJc26W1xHHFchECUsH.bts.2	client	0
 \.
 
 
 --
--- TOC entry 5233 (class 0 OID 0)
--- Dependencies: 239
+-- Name: blogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.blogs_id_seq', 9, true);
+
+
+--
 -- Name: cart_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1067,8 +1031,6 @@ SELECT pg_catalog.setval('public.cart_items_id_seq', 1, false);
 
 
 --
--- TOC entry 5234 (class 0 OID 0)
--- Dependencies: 221
 -- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1076,44 +1038,34 @@ SELECT pg_catalog.setval('public.categories_id_seq', 3, true);
 
 
 --
--- TOC entry 5235 (class 0 OID 0)
--- Dependencies: 225
 -- Name: categories_service_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.categories_service_id_seq', 2, true);
+SELECT pg_catalog.setval('public.categories_service_id_seq', 4, true);
 
 
 --
--- TOC entry 5236 (class 0 OID 0)
--- Dependencies: 231
 -- Name: freelancers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.freelancers_id_seq', 1, true);
+SELECT pg_catalog.setval('public.freelancers_id_seq', 3, true);
 
 
 --
--- TOC entry 5237 (class 0 OID 0)
--- Dependencies: 237
 -- Name: order_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.order_items_id_seq', 1, false);
+SELECT pg_catalog.setval('public.order_items_id_seq', 8, true);
 
 
 --
--- TOC entry 5238 (class 0 OID 0)
--- Dependencies: 223
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.orders_id_seq', 1, false);
+SELECT pg_catalog.setval('public.orders_id_seq', 6, true);
 
 
 --
--- TOC entry 5239 (class 0 OID 0)
--- Dependencies: 233
 -- Name: products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1121,44 +1073,34 @@ SELECT pg_catalog.setval('public.products_id_seq', 4, true);
 
 
 --
--- TOC entry 5240 (class 0 OID 0)
--- Dependencies: 245
 -- Name: quotation_proposals_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.quotation_proposals_id_seq', 1, false);
+SELECT pg_catalog.setval('public.quotation_proposals_id_seq', 2, true);
 
 
 --
--- TOC entry 5241 (class 0 OID 0)
--- Dependencies: 241
 -- Name: quotations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.quotations_id_seq', 1, false);
+SELECT pg_catalog.setval('public.quotations_id_seq', 1, true);
 
 
 --
--- TOC entry 5242 (class 0 OID 0)
--- Dependencies: 243
 -- Name: ratings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.ratings_id_seq', 19, true);
+SELECT pg_catalog.setval('public.ratings_id_seq', 20, true);
 
 
 --
--- TOC entry 5243 (class 0 OID 0)
--- Dependencies: 235
 -- Name: services_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.services_id_seq', 3, true);
+SELECT pg_catalog.setval('public.services_id_seq', 4, true);
 
 
 --
--- TOC entry 5244 (class 0 OID 0)
--- Dependencies: 247
 -- Name: settings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1166,8 +1108,6 @@ SELECT pg_catalog.setval('public.settings_id_seq', 1, true);
 
 
 --
--- TOC entry 5245 (class 0 OID 0)
--- Dependencies: 229
 -- Name: site_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1175,25 +1115,36 @@ SELECT pg_catalog.setval('public.site_id_seq', 1, false);
 
 
 --
--- TOC entry 5246 (class 0 OID 0)
--- Dependencies: 227
 -- Name: suppliers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.suppliers_id_seq', 1, false);
+SELECT pg_catalog.setval('public.suppliers_id_seq', 1, true);
 
 
 --
--- TOC entry 5247 (class 0 OID 0)
--- Dependencies: 219
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+SELECT pg_catalog.setval('public.users_id_seq', 3, true);
 
 
 --
--- TOC entry 5009 (class 2606 OID 16600)
+-- Name: blogs blogs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blogs
+    ADD CONSTRAINT blogs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blogs blogs_slug_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blogs
+    ADD CONSTRAINT blogs_slug_key UNIQUE (slug);
+
+
+--
 -- Name: cart_items cart_items_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1202,7 +1153,6 @@ ALTER TABLE ONLY public.cart_items
 
 
 --
--- TOC entry 4960 (class 2606 OID 16425)
 -- Name: categories categories_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1211,7 +1161,6 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 4962 (class 2606 OID 16423)
 -- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1220,7 +1169,6 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 4968 (class 2606 OID 16458)
 -- Name: categories_service categories_service_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1229,7 +1177,6 @@ ALTER TABLE ONLY public.categories_service
 
 
 --
--- TOC entry 4970 (class 2606 OID 16456)
 -- Name: categories_service categories_service_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1238,7 +1185,6 @@ ALTER TABLE ONLY public.categories_service
 
 
 --
--- TOC entry 4972 (class 2606 OID 16460)
 -- Name: categories_service categories_service_slug_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1247,7 +1193,6 @@ ALTER TABLE ONLY public.categories_service
 
 
 --
--- TOC entry 4987 (class 2606 OID 16512)
 -- Name: freelancers freelancers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1256,7 +1201,6 @@ ALTER TABLE ONLY public.freelancers
 
 
 --
--- TOC entry 5007 (class 2606 OID 16580)
 -- Name: order_items order_items_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1265,7 +1209,6 @@ ALTER TABLE ONLY public.order_items
 
 
 --
--- TOC entry 4966 (class 2606 OID 16443)
 -- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1274,7 +1217,6 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- TOC entry 4997 (class 2606 OID 16533)
 -- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1283,7 +1225,6 @@ ALTER TABLE ONLY public.products
 
 
 --
--- TOC entry 4999 (class 2606 OID 16535)
 -- Name: products products_slug_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1292,7 +1233,6 @@ ALTER TABLE ONLY public.products
 
 
 --
--- TOC entry 5019 (class 2606 OID 16681)
 -- Name: quotation_proposals quotation_proposals_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1301,7 +1241,6 @@ ALTER TABLE ONLY public.quotation_proposals
 
 
 --
--- TOC entry 5013 (class 2606 OID 16630)
 -- Name: quotations quotations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1310,7 +1249,6 @@ ALTER TABLE ONLY public.quotations
 
 
 --
--- TOC entry 5016 (class 2606 OID 16650)
 -- Name: ratings ratings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1319,7 +1257,6 @@ ALTER TABLE ONLY public.ratings
 
 
 --
--- TOC entry 5002 (class 2606 OID 16560)
 -- Name: services services_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1328,7 +1265,6 @@ ALTER TABLE ONLY public.services
 
 
 --
--- TOC entry 5004 (class 2606 OID 16562)
 -- Name: services services_slug_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1337,7 +1273,6 @@ ALTER TABLE ONLY public.services
 
 
 --
--- TOC entry 5022 (class 2606 OID 16705)
 -- Name: settings settings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1346,7 +1281,6 @@ ALTER TABLE ONLY public.settings
 
 
 --
--- TOC entry 4985 (class 2606 OID 16496)
 -- Name: site site_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1355,7 +1289,6 @@ ALTER TABLE ONLY public.site
 
 
 --
--- TOC entry 4982 (class 2606 OID 16473)
 -- Name: suppliers suppliers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1364,7 +1297,6 @@ ALTER TABLE ONLY public.suppliers
 
 
 --
--- TOC entry 4958 (class 2606 OID 16410)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1373,7 +1305,13 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 5010 (class 1259 OID 16611)
+-- Name: ix_blogs_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_blogs_id ON public.blogs USING btree (id);
+
+
+--
 -- Name: ix_cart_items_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1381,7 +1319,6 @@ CREATE INDEX ix_cart_items_id ON public.cart_items USING btree (id);
 
 
 --
--- TOC entry 4963 (class 1259 OID 16426)
 -- Name: ix_categories_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1389,7 +1326,6 @@ CREATE INDEX ix_categories_id ON public.categories USING btree (id);
 
 
 --
--- TOC entry 4973 (class 1259 OID 16461)
 -- Name: ix_categories_service_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1397,7 +1333,6 @@ CREATE INDEX ix_categories_service_id ON public.categories_service USING btree (
 
 
 --
--- TOC entry 4988 (class 1259 OID 16514)
 -- Name: ix_freelancers_city; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1405,7 +1340,6 @@ CREATE INDEX ix_freelancers_city ON public.freelancers USING btree (city);
 
 
 --
--- TOC entry 4989 (class 1259 OID 16518)
 -- Name: ix_freelancers_email; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1413,7 +1347,6 @@ CREATE UNIQUE INDEX ix_freelancers_email ON public.freelancers USING btree (emai
 
 
 --
--- TOC entry 4990 (class 1259 OID 16519)
 -- Name: ix_freelancers_first_name; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1421,7 +1354,6 @@ CREATE INDEX ix_freelancers_first_name ON public.freelancers USING btree (first_
 
 
 --
--- TOC entry 4991 (class 1259 OID 16515)
 -- Name: ix_freelancers_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1429,7 +1361,6 @@ CREATE INDEX ix_freelancers_id ON public.freelancers USING btree (id);
 
 
 --
--- TOC entry 4992 (class 1259 OID 16513)
 -- Name: ix_freelancers_last_name; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1437,7 +1368,6 @@ CREATE INDEX ix_freelancers_last_name ON public.freelancers USING btree (last_na
 
 
 --
--- TOC entry 4993 (class 1259 OID 16516)
 -- Name: ix_freelancers_tel; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1445,7 +1375,6 @@ CREATE UNIQUE INDEX ix_freelancers_tel ON public.freelancers USING btree (tel);
 
 
 --
--- TOC entry 4994 (class 1259 OID 16517)
 -- Name: ix_freelancers_username; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1453,7 +1382,6 @@ CREATE UNIQUE INDEX ix_freelancers_username ON public.freelancers USING btree (u
 
 
 --
--- TOC entry 5005 (class 1259 OID 16591)
 -- Name: ix_order_items_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1461,7 +1389,6 @@ CREATE INDEX ix_order_items_id ON public.order_items USING btree (id);
 
 
 --
--- TOC entry 4964 (class 1259 OID 16444)
 -- Name: ix_orders_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1469,7 +1396,6 @@ CREATE INDEX ix_orders_id ON public.orders USING btree (id);
 
 
 --
--- TOC entry 4995 (class 1259 OID 16546)
 -- Name: ix_products_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1477,7 +1403,6 @@ CREATE INDEX ix_products_id ON public.products USING btree (id);
 
 
 --
--- TOC entry 5017 (class 1259 OID 16692)
 -- Name: ix_quotation_proposals_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1485,7 +1410,6 @@ CREATE INDEX ix_quotation_proposals_id ON public.quotation_proposals USING btree
 
 
 --
--- TOC entry 5011 (class 1259 OID 16636)
 -- Name: ix_quotations_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1493,7 +1417,6 @@ CREATE INDEX ix_quotations_id ON public.quotations USING btree (id);
 
 
 --
--- TOC entry 5014 (class 1259 OID 16666)
 -- Name: ix_ratings_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1501,7 +1424,6 @@ CREATE INDEX ix_ratings_id ON public.ratings USING btree (id);
 
 
 --
--- TOC entry 5000 (class 1259 OID 16568)
 -- Name: ix_services_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1509,7 +1431,6 @@ CREATE INDEX ix_services_id ON public.services USING btree (id);
 
 
 --
--- TOC entry 5020 (class 1259 OID 16706)
 -- Name: ix_settings_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1517,7 +1438,6 @@ CREATE INDEX ix_settings_id ON public.settings USING btree (id);
 
 
 --
--- TOC entry 4983 (class 1259 OID 16497)
 -- Name: ix_site_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1525,7 +1445,6 @@ CREATE INDEX ix_site_id ON public.site USING btree (id);
 
 
 --
--- TOC entry 4974 (class 1259 OID 16477)
 -- Name: ix_suppliers_city; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1533,7 +1452,6 @@ CREATE INDEX ix_suppliers_city ON public.suppliers USING btree (city);
 
 
 --
--- TOC entry 4975 (class 1259 OID 16475)
 -- Name: ix_suppliers_company_name; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1541,7 +1459,6 @@ CREATE INDEX ix_suppliers_company_name ON public.suppliers USING btree (company_
 
 
 --
--- TOC entry 4976 (class 1259 OID 16479)
 -- Name: ix_suppliers_email; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1549,7 +1466,6 @@ CREATE UNIQUE INDEX ix_suppliers_email ON public.suppliers USING btree (email);
 
 
 --
--- TOC entry 4977 (class 1259 OID 16478)
 -- Name: ix_suppliers_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1557,7 +1473,6 @@ CREATE INDEX ix_suppliers_id ON public.suppliers USING btree (id);
 
 
 --
--- TOC entry 4978 (class 1259 OID 16476)
 -- Name: ix_suppliers_main_category; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1565,7 +1480,6 @@ CREATE INDEX ix_suppliers_main_category ON public.suppliers USING btree (main_ca
 
 
 --
--- TOC entry 4979 (class 1259 OID 16474)
 -- Name: ix_suppliers_owner_name; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1573,7 +1487,6 @@ CREATE INDEX ix_suppliers_owner_name ON public.suppliers USING btree (owner_name
 
 
 --
--- TOC entry 4980 (class 1259 OID 16480)
 -- Name: ix_suppliers_tel; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1581,7 +1494,6 @@ CREATE UNIQUE INDEX ix_suppliers_tel ON public.suppliers USING btree (tel);
 
 
 --
--- TOC entry 4955 (class 1259 OID 16412)
 -- Name: ix_users_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1589,7 +1501,6 @@ CREATE INDEX ix_users_id ON public.users USING btree (id);
 
 
 --
--- TOC entry 4956 (class 1259 OID 16411)
 -- Name: ix_users_username; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1597,7 +1508,6 @@ CREATE UNIQUE INDEX ix_users_username ON public.users USING btree (username);
 
 
 --
--- TOC entry 5028 (class 2606 OID 16606)
 -- Name: cart_items cart_items_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1606,7 +1516,6 @@ ALTER TABLE ONLY public.cart_items
 
 
 --
--- TOC entry 5029 (class 2606 OID 16601)
 -- Name: cart_items cart_items_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1615,7 +1524,22 @@ ALTER TABLE ONLY public.cart_items
 
 
 --
--- TOC entry 5026 (class 2606 OID 16581)
+-- Name: quotations fk_quotation_proposal; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.quotations
+    ADD CONSTRAINT fk_quotation_proposal FOREIGN KEY (selected_proposal_id) REFERENCES public.quotation_proposals(id);
+
+
+--
+-- Name: freelancers freelancers_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.freelancers
+    ADD CONSTRAINT freelancers_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: order_items order_items_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1624,7 +1548,6 @@ ALTER TABLE ONLY public.order_items
 
 
 --
--- TOC entry 5027 (class 2606 OID 16586)
 -- Name: order_items order_items_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1633,7 +1556,6 @@ ALTER TABLE ONLY public.order_items
 
 
 --
--- TOC entry 5023 (class 2606 OID 16536)
 -- Name: products products_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1642,7 +1564,6 @@ ALTER TABLE ONLY public.products
 
 
 --
--- TOC entry 5024 (class 2606 OID 16541)
 -- Name: products products_supplier_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1651,7 +1572,6 @@ ALTER TABLE ONLY public.products
 
 
 --
--- TOC entry 5034 (class 2606 OID 16687)
 -- Name: quotation_proposals quotation_proposals_freelancer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1660,7 +1580,6 @@ ALTER TABLE ONLY public.quotation_proposals
 
 
 --
--- TOC entry 5035 (class 2606 OID 16682)
 -- Name: quotation_proposals quotation_proposals_quotation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1669,7 +1588,6 @@ ALTER TABLE ONLY public.quotation_proposals
 
 
 --
--- TOC entry 5030 (class 2606 OID 16631)
 -- Name: quotations quotations_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1677,16 +1595,7 @@ ALTER TABLE ONLY public.quotations
     ADD CONSTRAINT quotations_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.services(id);
 
 
-ALTER TABLE ONLY public.quotations
-    ADD CONSTRAINT fk_quotation_proposal FOREIGN KEY (selected_proposal_id) REFERENCES public.quotation_proposals(id);
-
-
-ALTER TABLE ONLY public.quotations
-    ADD CONSTRAINT quotations_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
 --
--- TOC entry 5031 (class 2606 OID 16661)
 -- Name: ratings ratings_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1695,7 +1604,6 @@ ALTER TABLE ONLY public.ratings
 
 
 --
--- TOC entry 5032 (class 2606 OID 16656)
 -- Name: ratings ratings_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1704,7 +1612,6 @@ ALTER TABLE ONLY public.ratings
 
 
 --
--- TOC entry 5033 (class 2606 OID 16651)
 -- Name: ratings ratings_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1713,7 +1620,6 @@ ALTER TABLE ONLY public.ratings
 
 
 --
--- TOC entry 5025 (class 2606 OID 16563)
 -- Name: services services_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1721,11 +1627,9 @@ ALTER TABLE ONLY public.services
     ADD CONSTRAINT services_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories_service(id);
 
 
--- Completed on 2026-01-29 13:20:06
-
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict vJ1aiSExLzyEAIlrgSXAU8Vc2DLfAcgWRXqsdL144bbtLo17unrRcmc5sy4OaWN
+\unrestrict pDXwZVcKbFAdc53mYHBpZusQjOlaP98fhdrLSNeJ0dbYR9aqrLp2WLEXX0DtT8f
 
