@@ -47,14 +47,6 @@ services:
     ports:
       - "3005:3005"
 
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run --token eyJhIjoiYjA0ODgxZjkwYWU2OGY1YzA4ZjllNjI2YTljMmNkNWQiLCJ0IjoiODM0MmJkMjUtMzUxZi00ODFkLWFmZDUtZWUxMzExMzMyMmUwIiwicyI6IlkySXlObU16T1RVdE9UZGlNaTAwTWpkbUxUa3dObUl0T0dabFpqWXhZbVUxTUdaaiJ9
-    networks:
-      - ween_net
-
 networks:
   ween_net:
 
