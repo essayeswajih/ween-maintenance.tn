@@ -8,13 +8,13 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'http',
-        hostname: 'backend',
+        hostname: 'ween-maintenance-backend',
         port: '8005',
         pathname: '/uploads/**',
       },
       {
         protocol: 'http',
-        hostname: 'backend',
+        hostname: 'ween-maintenance-backend',
         port: '8005',
         pathname: '/images/**',
       },
@@ -64,55 +64,55 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://backend:8005/:path*',
+        destination: 'http://ween-maintenance-backend:8005/:path*',
       },
       {
         source: '/auth/:path*',
-        destination: 'http://backend:8005/auth/:path*',
+        destination: 'http://ween-maintenance-backend:8005/auth/:path*',
       },
       {
         source: '/vetrine/:path*',
-        destination: 'http://backend:8005/vetrine/:path*',
+        destination: 'http://ween-maintenance-backend:8005/vetrine/:path*',
       },
       {
         source: '/service/:path*',
-        destination: 'http://backend:8005/service/:path*',
+        destination: 'http://ween-maintenance-backend:8005/service/:path*',
       },
       {
         source: '/rating/:path*',
-        destination: 'http://backend:8005/rating/:path*',
+        destination: 'http://ween-maintenance-backend:8005/rating/:path*',
       },
       {
         source: '/site/:path*',
-        destination: 'http://backend:8005/site/:path*',
+        destination: 'http://ween-maintenance-backend:8005/site/:path*',
       },
       {
         source: '/fournisseur/:path*',
-        destination: 'http://backend:8005/fournisseur/:path*',
+        destination: 'http://ween-maintenance-backend:8005/fournisseur/:path*',
       },
       {
         source: '/freelancers/:path*',
-        destination: 'http://backend:8005/freelancers/:path*',
+        destination: 'http://ween-maintenance-backend:8005/freelancers/:path*',
       },
       {
         source: '/quotations/:path*',
-        destination: 'http://backend:8005/quotations/:path*',
+        destination: 'http://ween-maintenance-backend:8005/quotations/:path*',
       },
       {
         source: '/settings/:path*',
-        destination: 'http://backend:8005/settings/:path*',
+        destination: 'http://ween-maintenance-backend:8005/settings/:path*',
       },
       {
         source: '/upload',
-        destination: 'http://backend:8005/upload',
+        destination: 'http://ween-maintenance-backend:8005/upload',
       },
       {
         source: '/images',
-        destination: 'http://backend:8005/images',
+        destination: 'http://ween-maintenance-backend:8005/images',
       },
       {
         source: '/uploads/:path*',
-        destination: 'http://backend:8005/uploads/:path*',
+        destination: 'http://ween-maintenance-backend:8005/uploads/:path*',
       },
     ]
   },
