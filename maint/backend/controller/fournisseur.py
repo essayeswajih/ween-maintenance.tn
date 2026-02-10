@@ -21,7 +21,7 @@ from utils.auth import admin_only
 router = APIRouter(dependencies=[Depends(admin_only)])
 
 
-@router.post("", response_model=SupplierResponse, dependencies=[Depends(admin_only)])
+@router.post(("/"), response_model=SupplierResponse, dependencies=[Depends(admin_only)])
 def create_supplier_api(
     supplier: SupplierCreate,
     db: Session = Depends(get_db)
@@ -40,7 +40,7 @@ def get_supplier_api(
     return supplier
 
 
-@router.get("", response_model=List[SupplierResponse])
+@router.get(("/"), response_model=List[SupplierResponse])
 def list_suppliers_api(
     skip: int = 0,
     limit: int = 20,

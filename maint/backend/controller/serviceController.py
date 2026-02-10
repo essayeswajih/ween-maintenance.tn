@@ -51,11 +51,11 @@ def delete_category(category_id: int, db: Session = Depends(get_db), current_use
 # SERVICE ENDPOINTS
 # -------------------------
 
-@router.post("", response_model=ServiceResponse, status_code=status.HTTP_201_CREATED)
+@router.post(("/"), response_model=ServiceResponse, status_code=status.HTTP_201_CREATED)
 def create_service(service_in: ServiceCreate, db: Session = Depends(get_db), current_user: User = Depends(admin_only)):
     return service_crud.create_service(db, service_in)
 
-@router.get("", response_model=List[ServiceResponse])
+@router.get(("/"), response_model=List[ServiceResponse])
 def read_services(skip: int = 0, limit: int = 100, city: str = None, db: Session = Depends(get_db)):
     # TODO: Implement city filtering logic (requires joining with Freelancers or adding city to Service)
     # For now, we return all services, but the signature supports the query param.

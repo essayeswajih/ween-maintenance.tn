@@ -7,7 +7,7 @@ from schemas.blogSchemas import BlogCreate, BlogUpdate, BlogResponse
 
 router = APIRouter()
 
-@router.post("", response_model=BlogResponse, status_code=status.HTTP_201_CREATED)
+@router.post(("/"), response_model=BlogResponse, status_code=status.HTTP_201_CREATED)
 def create_blog(blog_in: BlogCreate, db: Session = Depends(get_db)):
     # Check if slug already exists
     existing = blogCrud.get_blog_by_slug(db, blog_in.slug)
@@ -15,7 +15,7 @@ def create_blog(blog_in: BlogCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Slug already exists")
     return blogCrud.create_blog(db, blog_in)
 
-@router.get("", response_model=List[BlogResponse])
+@router.get(("/"), response_model=List[BlogResponse])
 def read_blogs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return blogCrud.get_blogs(db, skip=skip, limit=limit)
 

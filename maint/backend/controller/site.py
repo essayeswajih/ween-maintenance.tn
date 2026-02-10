@@ -8,7 +8,7 @@ from schemas.site import SiteCreate, SiteUpdate, SiteResponse
 router = APIRouter()
 
 # GET site parameters
-@router.get("", response_model=SiteResponse)
+@router.get(("/"), response_model=SiteResponse)
 def read_site(db: Session = Depends(get_db)):
     site = get_site(db)
     if not site:
@@ -16,7 +16,7 @@ def read_site(db: Session = Depends(get_db)):
     return site
 
 # UPDATE site parameters
-@router.put("", response_model=SiteResponse)
+@router.put(("/"), response_model=SiteResponse)
 def update_site(site_in: SiteUpdate, db: Session = Depends(get_db)):
     site = update_site(db, site_id=1, site_in=site_in)
     if not site:
@@ -24,7 +24,7 @@ def update_site(site_in: SiteUpdate, db: Session = Depends(get_db)):
     return site
 
 # INIT site parameters (optional, only once)
-@router.post("", response_model=SiteResponse, status_code=201)
+@router.post(("/"), response_model=SiteResponse, status_code=201)
 def create_site(site_in: SiteCreate, db: Session = Depends(get_db)):
     existing = get_site(db)
     if existing:

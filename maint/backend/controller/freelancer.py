@@ -8,7 +8,7 @@ from utils.auth import admin_only
 
 router = APIRouter()
 
-@router.post("", response_model=FreelancerResponse, status_code=status.HTTP_201_CREATED)
+@router.post(("/"), response_model=FreelancerResponse, status_code=status.HTTP_201_CREATED)
 def create_freelancer(freelancer: FreelancerCreate, db: Session = Depends(get_db)):
     db_freelancer = crud_freelancer.get_freelancer_by_email(db, email=freelancer.email)
     if db_freelancer:
@@ -20,7 +20,7 @@ def create_freelancer(freelancer: FreelancerCreate, db: Session = Depends(get_db
         
     return crud_freelancer.create_freelancer(db=db, freelancer=freelancer)
 
-@router.get("", response_model=List[FreelancerResponse])
+@router.get(("/"), response_model=List[FreelancerResponse])
 def read_freelancers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: Session = Depends(admin_only)):
     return crud_freelancer.get_freelancers(db, skip=skip, limit=limit)
 

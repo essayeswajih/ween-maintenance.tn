@@ -13,7 +13,7 @@ router = APIRouter(
 # -------------------------
 # CREATE RATING
 # -------------------------
-@router.post("", response_model=RatingResponse, status_code=status.HTTP_201_CREATED)
+@router.post(("/"), response_model=RatingResponse, status_code=status.HTTP_201_CREATED)
 def create_rating(rating_in: RatingCreate, db: Session = Depends(get_db)):
     if not rating_in.service_id and not rating_in.product_id:
         raise HTTPException(
@@ -27,7 +27,7 @@ def create_rating(rating_in: RatingCreate, db: Session = Depends(get_db)):
 # -------------------------
 # GET ALL RATINGS
 # -------------------------
-@router.get("", response_model=List[RatingResponse])
+@router.get(("/"), response_model=List[RatingResponse])
 def read_ratings(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud_rating.get_ratings(db, skip=skip, limit=limit)
 
