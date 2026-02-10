@@ -66,56 +66,34 @@ const nextConfig = {
         source: '/api/:path*',
         destination: 'http://ween-maintenance-backend:8005/:path*',
       },
-      {
-        source: '/auth/:path*',
-        destination: 'http://ween-maintenance-backend:8005/auth/:path*',
-      },
-      {
-        source: '/vetrine/:path*',
-        destination: 'http://ween-maintenance-backend:8005/vetrine/:path*',
-      },
-      {
-        source: '/service/:path*',
-        destination: 'http://ween-maintenance-backend:8005/service/:path*',
-      },
-      {
-        source: '/rating/:path*',
-        destination: 'http://ween-maintenance-backend:8005/rating/:path*',
-      },
-      {
-        source: '/site/:path*',
-        destination: 'http://ween-maintenance-backend:8005/site/:path*',
-      },
-      {
-        source: '/fournisseur/:path*',
-        destination: 'http://ween-maintenance-backend:8005/fournisseur/:path*',
-      },
-      {
-        source: '/freelancers/:path*',
-        destination: 'http://ween-maintenance-backend:8005/freelancers/:path*',
-      },
-      {
-        source: '/quotations/:path*',
-        destination: 'http://ween-maintenance-backend:8005/quotations/:path*',
-      },
-      {
-        source: '/settings/:path*',
-        destination: 'http://ween-maintenance-backend:8005/settings/:path*',
-      },
-      {
-        source: '/upload',
-        destination: 'http://ween-maintenance-backend:8005/upload',
-      },
-      {
-        source: '/images',
-        destination: 'http://ween-maintenance-backend:8005/images',
-      },
-      {
-        source: '/uploads/:path*',
-        destination: 'http://ween-maintenance-backend:8005/uploads/:path*',
-      },
+
+      // Root endpoints
+      { source: '/api/service', destination: 'http://ween-maintenance-backend:8005/service/' },
+      { source: '/api/vetrine', destination: 'http://ween-maintenance-backend:8005/vetrine/' },
+      { source: '/api/rating', destination: 'http://ween-maintenance-backend:8005/rating/' },
+      { source: '/api/site', destination: 'http://ween-maintenance-backend:8005/site/' },
+      { source: '/api/fournisseur', destination: 'http://ween-maintenance-backend:8005/fournisseur/' },
+      { source: '/api/freelancers', destination: 'http://ween-maintenance-backend:8005/freelancers/' },
+      { source: '/api/quotations', destination: 'http://ween-maintenance-backend:8005/quotations/' },
+      { source: '/api/settings', destination: 'http://ween-maintenance-backend:8005/settings/' },
+
+      // Existing path-based rewrites
+      { source: '/service/:path*', destination: 'http://ween-maintenance-backend:8005/service/:path*' },
+      { source: '/vetrine/:path*', destination: 'http://ween-maintenance-backend:8005/vetrine/:path*' },
+      { source: '/rating/:path*', destination: 'http://ween-maintenance-backend:8005/rating/:path*' },
+      { source: '/site/:path*', destination: 'http://ween-maintenance-backend:8005/site/:path*' },
+      { source: '/fournisseur/:path*', destination: 'http://ween-maintenance-backend:8005/fournisseur/:path*' },
+      { source: '/freelancers/:path*', destination: 'http://ween-maintenance-backend:8005/freelancers/:path*' },
+      { source: '/quotations/:path*', destination: 'http://ween-maintenance-backend:8005/quotations/:path*' },
+      { source: '/settings/:path*', destination: 'http://ween-maintenance-backend:8005/settings/:path*' },
+
+      // Uploads & images
+      { source: '/upload', destination: 'http://ween-maintenance-backend:8005/upload' },
+      { source: '/images', destination: 'http://ween-maintenance-backend:8005/images' },
+      { source: '/uploads/:path*', destination: 'http://ween-maintenance-backend:8005/uploads/:path*' },
     ]
-  },
+  }
+  ,
 }
 
 export default nextConfig
