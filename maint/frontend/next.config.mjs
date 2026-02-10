@@ -73,6 +73,8 @@ async rewrites() {
     { source: '/api/freelancers', destination: 'http://ween-maintenance-backend:8005/freelancers/' },
     { source: '/api/quotations', destination: 'http://ween-maintenance-backend:8005/quotations/' },
     { source: '/api/settings', destination: 'http://ween-maintenance-backend:8005/settings/' },
+    { source: '/api/blogs', destination: 'http://ween-maintenance-backend:8005/blogs/' },
+
 
     // Existing path-based rewrites
     { source: '/service/:path*', destination: 'http://ween-maintenance-backend:8005/service/:path*' },
@@ -83,6 +85,7 @@ async rewrites() {
     { source: '/freelancers/:path*', destination: 'http://ween-maintenance-backend:8005/freelancers/:path*' },
     { source: '/quotations/:path*', destination: 'http://ween-maintenance-backend:8005/quotations/:path*' },
     { source: '/settings/:path*', destination: 'http://ween-maintenance-backend:8005/settings/:path*' },
+    { source: '/blogs/:path*', destination: 'http://ween-maintenance-backend:8005/blogs/:path*' },
 
     // Uploads & images
     { source: '/upload', destination: 'http://ween-maintenance-backend:8005/upload' },
