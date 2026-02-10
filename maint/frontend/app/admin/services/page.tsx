@@ -17,7 +17,7 @@ export default function AdminServicesPage() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const data = await apiFetch<Service[]>('/service/')
+        const data = await apiFetch<Service[]>('/service')
         setServices(data || [])
       } catch (err) {
         console.error('Failed to fetch admin services:', err)
