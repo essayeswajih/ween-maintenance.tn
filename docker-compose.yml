@@ -1,0 +1,65 @@
+# version: "3.9" (obsolete)
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: maintenance_tn
+    volumes:
+      - ./maint/backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./maint/ween-maintenance.sql:/docker-entrypoint-initdb.d/ween-maintenance.sql
+      - ./postgsql:/var/lib/postgresql/data
+    networks:
+      - ween_net
+
+  backend:
+    build: ./maint/backend
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/maintenance_tn
+      SECRET_KEY: your_super_secret_key_change_this_in_production
+      CORS_ORIGINS: "https://ween-maintenance.tn,http://localhost:3005"
+    depends_on:
+      - db
+    ports:
+      - "8005:8005"
+
+    networks:
+      - ween_net
+
+  frontend:
+    build: ./maint/frontend
+    restart: always
+    environment:
+      PORT: 3005
+      NEXT_PUBLIC_API_URL: "/api"
+      SERVER_API_URL: "http://backend:8005"
+      NEXT_PUBLIC_BASE_URL: "https://ween-maintenance.tn"
+      #NODE_ENV: "production"
+      NODE_ENV: "dev"
+    depends_on:
+      - backend
+    networks:
+      - ween_net
+    ports:
+      - "3005:3005"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token eyJhIjoiYjA0ODgxZjkwYWU2OGY1YzA4ZjllNjI2YTljMmNkNWQiLCJ0IjoiODM0MmJkMjUtMzUxZi00ODFkLWFmZDUtZWUxMzExMzMyMmUwIiwicyI6IlkySXlObU16T1RVdE9UZGlNaTAwTWpkbUxUa3dObUl0T0dabFpqWXhZbVUxTUdaaiJ9
+    networks:
+      - ween_net
+
+networks:
+  ween_net:
+
+
+volumes:
+  postgres_data:
+
+

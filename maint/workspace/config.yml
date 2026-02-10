@@ -1,0 +1,12 @@
+tunnel: ween-tunnel
+credentials-file: /etc/cloudflared/ween-tunnel.json
+
+ingress:
+  - hostname: ween-maintenance.tn
+    service: http://frontend:3005
+
+  - hostname: admin.ween-maintenance.tn
+    service: http://backend:8005
+
+  - service: http_status:404
+
