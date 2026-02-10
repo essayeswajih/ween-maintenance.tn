@@ -31,7 +31,7 @@ import os
 
 # ... imports ...
 
-app = FastAPI()
+app = FastAPI(redirect_slashes=False)
 Base.metadata.create_all(bind=engine)
 
 # Get CORS origins from environment variable
