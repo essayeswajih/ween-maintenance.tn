@@ -62,10 +62,7 @@ const nextConfig = {
   },
 async rewrites() {
   return [
-    {
-      source: '/api/:path*',
-      destination: 'http://ween-maintenance-backend:8005/:path*',
-    },
+
 
     // Root endpoints
     { source: '/api/service', destination: 'http://ween-maintenance-backend:8005/service/' },
@@ -91,6 +88,10 @@ async rewrites() {
     { source: '/upload', destination: 'http://ween-maintenance-backend:8005/upload' },
     { source: '/images', destination: 'http://ween-maintenance-backend:8005/images' },
     { source: '/uploads/:path*', destination: 'http://ween-maintenance-backend:8005/uploads/:path*' },
+    {
+      source: '/api/:path*',
+      destination: 'http://ween-maintenance-backend:8005/:path*',
+    },
   ]
 }
 ,
