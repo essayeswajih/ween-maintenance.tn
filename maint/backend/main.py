@@ -94,7 +94,7 @@ def startup_event():
     seed_blogs_if_empty(db)
     db.close()
 
-@app.get("")
+@app.get("/")
 @limiter.limit("5/minute")
 def read_root(request: Request, db=Depends(get_db)):
     return {"message": "Not allowed here."}

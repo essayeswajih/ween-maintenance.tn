@@ -66,7 +66,7 @@ def create_quotation_request(
     return new_quote
 
 
-@router.get("")
+@router.get("/")
 def get_quotations(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
