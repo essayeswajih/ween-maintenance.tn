@@ -44,3 +44,19 @@ def list_uploaded_images(user: User = Depends(get_current_user)):
 
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+
+@router.delete("/delete/{filename}")
+async def delete_image(filename: str, user: User = Depends(get_current_user)):
+    try:
+        # Prevent directory traversal attacks
+        safe_filename = os.path.basename(filename)
+        file_path = os.path.join(UPLOAD_DIR, safe_filename)
+
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            return JSONResponse(content={"message": f"Image {safe_filename} deleted successfully"})
+        else:
+            return JSONResponse(status_code=404, content={"error": "Image not found"})
+
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})

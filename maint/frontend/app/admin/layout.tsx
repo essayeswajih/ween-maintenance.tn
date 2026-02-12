@@ -4,7 +4,7 @@ import React from "react"
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, BarChart3, Package, Wrench, ShoppingBag, FileText, Users, Settings, LogOut } from 'lucide-react'
+import { Menu, X, BarChart3, Package, Wrench, ShoppingBag, FileText, Users, Settings, LogOut, Image } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/auth-context'
 import { useRouter } from 'next/navigation'
@@ -29,6 +29,7 @@ export default function AdminLayout({
     { icon: FileText, label: 'Articles Blog', href: '/admin/articles' },
     { icon: Users, label: 'Fournisseurs', href: '/admin/fournisseurs' },
     { icon: Users, label: 'Freelancers', href: '/admin/freelancers' },
+    { icon: Image, label: 'Media', href: '/admin/media' },
     { icon: Settings, label: 'Paramètres', href: '/admin/settings' },
   ]
 

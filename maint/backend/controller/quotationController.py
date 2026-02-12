@@ -35,7 +35,7 @@ class InviteFreelancer(BaseModel):
 
 # --- Endpoints ---
 
-@router.post(("/"), status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create_quotation_request(
     quote_in: QuotationCreate, 
     db: Session = Depends(get_db),
