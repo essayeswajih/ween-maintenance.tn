@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,6 +23,7 @@ export default function AdminMediaPage() {
     const [uploading, setUploading] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [copiedUrl, setCopiedUrl] = useState<string | null>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
         fetchImages()
@@ -32,10 +33,14 @@ export default function AdminMediaPage() {
         try {
             setLoading(true)
             const data = await apiFetch<{ images: string[] }>('/images')
-            setImages(data.images)
-        } catch (error) {
+            if (data && data.images) {
+                setImages(data.images)
+            } else {
+                setImages([])
+            }
+        } catch (error: any) {
             console.error('Failed to fetch images:', error)
-            toast.error('Erreur lors du chargement des images')
+            toast.error(`Erreur lors du chargement: ${error.message}`)
         } finally {
             setLoading(false)
         }
@@ -45,20 +50,31 @@ export default function AdminMediaPage() {
         const file = e.target.files?.[0]
         if (!file) return
 
+        // Validate file size (e.g., 5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Le fichier est trop volumineux (max 5Mo)')
+            return
+        }
+
         const formData = new FormData()
         formData.append('file', file)
 
         try {
             setUploading(true)
-            await apiFetch('/upload', {
+            console.log('Uploading file:', file.name)
+            const result = await apiFetch<any>('/upload', {
                 method: 'POST',
                 body: formData,
             })
+            console.log('Upload result:', result)
             toast.success('Image téléchargée avec succès')
             fetchImages()
-        } catch (error) {
+
+            // Reset input
+            if (fileInputRef.current) fileInputRef.current.value = ''
+        } catch (error: any) {
             console.error('Upload failed:', error)
-            toast.error('Échec du téléchargement')
+            toast.error(`Échec du téléchargement: ${error.message}`)
         } finally {
             setUploading(false)
         }
@@ -76,15 +92,13 @@ export default function AdminMediaPage() {
             })
             toast.success('Image supprimée')
             setImages(images.filter(img => img !== imageUrl))
-        } catch (error) {
+        } catch (error: any) {
             console.error('Delete failed:', error)
-            toast.error('Erreur lors de la suppression')
+            toast.error(`Erreur lors de la suppression: ${error.message}`)
         }
     }
 
     const copyToClipboard = (url: string) => {
-        // Construct full URL if needed, but relative should work for most internal uses
-        // If external usage is needed, we could use window.location.origin
         const fullUrl = `${window.location.origin}${url}`
         navigator.clipboard.writeText(fullUrl)
         setCopiedUrl(url)
@@ -93,7 +107,8 @@ export default function AdminMediaPage() {
     }
 
     const filteredImages = images.filter(img =>
-        img.toLowerCase().includes(searchQuery.toLowerCase())
+        img.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        img.split('/').pop()?.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
     return (
@@ -105,19 +120,22 @@ export default function AdminMediaPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <label className="cursor-pointer">
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept="image/*"
-                            onChange={handleUpload}
-                            disabled={uploading}
-                        />
-                        <Button disabled={uploading} className="gap-2">
-                            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                            {uploading ? 'Téléchargement...' : 'Télécharger une image'}
-                        </Button>
-                    </label>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleUpload}
+                        disabled={uploading}
+                    />
+                    <Button
+                        disabled={uploading}
+                        className="gap-2"
+                        onClick={() => fileInputRef.current?.click()}
+                    >
+                        {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                        {uploading ? 'Téléchargement...' : 'Télécharger une image'}
+                    </Button>
                 </div>
             </div>
 
