@@ -2,13 +2,14 @@ from urllib.parse import unquote
 from sqlalchemy import asc, desc, func, or_
 from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
-from models.vetrineModels import OrderStatus, Product, Order, OrderItem, CartItem, Category
-from schemas.vetrine import CategoryBase, ProductBase, OrderCreate, CartItemBase, OrderItemBase
+from models.vetrineModels import OrderStatus, Product, Order, OrderItem, CartItem, Category, SubCategory
+from schemas.vetrine import CategoryBase, ProductBase, OrderCreate, CartItemBase, OrderItemBase, SubCategoryBase
 from datetime import datetime
 from fastapi import HTTPException
 from random import randint
 
 from controller.sendMail import send_email
+from utils.auth import getSlug
 
 # CRUD operations for Product
 def get_products(
@@ -16,11 +17,12 @@ def get_products(
     skip: int = 0,
     limit: int = 100,
     category_name: Optional[str] = None,
+    subcategory_name: Optional[str] = None,
     max_price: Optional[float] = None,
     sortBy: Optional[str] = 'popularite',
     searchFor: Optional[str] = None
 ) -> List[Product]:
-    query = db.query(Product)
+    query = db.query(Product).options(joinedload(Product.category), joinedload(Product.subcategory))
 
     # Filter by category if category_name is provided (except "tous")
     if category_name and category_name.lower() != "tous":
@@ -28,6 +30,13 @@ def get_products(
         if not category:
             raise HTTPException(status_code=404, detail="Category not found")
         query = query.filter(Product.category_id == category.id)
+
+    # Filter by subcategory if subcategory_name is provided (except "tous")
+    if subcategory_name and subcategory_name.lower() != "tous":
+        subcategory = db.query(SubCategory).filter(func.lower(SubCategory.name) == subcategory_name.lower()).first()
+        if not subcategory:
+            raise HTTPException(status_code=404, detail="SubCategory not found")
+        query = query.filter(Product.subcategory_id == subcategory.id)
 
     # Filter by price if max_price is provided
     if max_price:
@@ -52,7 +61,9 @@ def get_products(
 
     # Apply pagination
     query = query.offset(skip).limit(limit)
-    return query.all()
+    products = query.all()
+    
+    return products
 
 def get_product_by_id(db: Session, product_id: int) -> Optional[Product]:
     return db.query(Product).filter(Product.id == product_id).first()
@@ -67,6 +78,7 @@ def create_product(db: Session, product: ProductBase) -> Product:
         stock_quantity=product.stock_quantity,
         in_stock=product.in_stock if product.in_stock is not None else True,
         category_id=product.category_id,
+        subcategory_id=product.subcategory_id,
         discounted_price=product.discounted_price,
         image_url=product.image_url,
         image2_url=product.image2_url,
@@ -89,11 +101,6 @@ def create_product(db: Session, product: ProductBase) -> Product:
     db.commit()
     db.refresh(db_product)
     return db_product
-
-def getSlug(name: str) -> str:
-    slug = name.lower().replace(" ", "-")
-    return slug
-
 def update_product(db: Session, product_id: int, product: ProductBase) -> Optional[Product]:
     db_product = db.query(Product).filter(Product.id == product_id).first()
     if not db_product:
@@ -105,6 +112,7 @@ def update_product(db: Session, product_id: int, product: ProductBase) -> Option
     db_product.stock_quantity = product.stock_quantity
     db_product.in_stock = product.in_stock if product.in_stock is not None else db_product.in_stock
     db_product.category_id = product.category_id
+    db_product.subcategory_id = product.subcategory_id
     db_product.discounted_price = product.discounted_price
     db_product.image_url = product.image_url
     db_product.image2_url = product.image2_url
@@ -139,7 +147,7 @@ def delete_product(db: Session, product_id: int) -> None:
 
 # Get all categories
 def get_categories(db: Session, skip: int = 0, limit: int = 10) -> List[Category]:
-    return db.query(Category).offset(skip).limit(limit).all()
+    return db.query(Category).options(joinedload(Category.subcategories)).offset(skip).limit(limit).all()
 
 # Get a category by ID
 def get_category_by_id(db: Session, category_id: int) -> Category:
@@ -171,6 +179,51 @@ def delete_category(db: Session, category_id: int) -> None:
     if db_category:
         db.delete(db_category)
         db.commit()
+    
+# CRUD operations for SubCategory
+
+def get_subcategories(db: Session, skip: int = 0, limit: int = 100) -> List[SubCategory]:
+    return db.query(SubCategory).offset(skip).limit(limit).all()
+
+def get_subcategory_by_id(db: Session, subcategory_id: int) -> Optional[SubCategory]:
+    return db.query(SubCategory).filter(SubCategory.id == subcategory_id).first()
+
+def get_subcategories_by_category(db: Session, category_id: int) -> List[SubCategory]:
+    return db.query(SubCategory).filter(SubCategory.category_id == category_id).all()
+
+def create_subcategory(db: Session, subcategory: SubCategoryBase) -> SubCategory:
+    db_subcategory = SubCategory(
+        name=subcategory.name,
+        description=subcategory.description,
+        image_url=subcategory.image_url,
+        category_id=subcategory.category_id,
+        slug=getSlug(subcategory.name)
+    )
+    db.add(db_subcategory)
+    db.commit()
+    db.refresh(db_subcategory)
+    return db_subcategory
+
+def update_subcategory(db: Session, subcategory_id: int, subcategory: SubCategoryBase) -> Optional[SubCategory]:
+    db_subcategory = db.query(SubCategory).filter(SubCategory.id == subcategory_id).first()
+    if not db_subcategory:
+        return None
+    db_subcategory.name = subcategory.name
+    db_subcategory.description = subcategory.description
+    db_subcategory.image_url = subcategory.image_url
+    db_subcategory.category_id = subcategory.category_id
+    db_subcategory.slug = getSlug(subcategory.name)
+    db.commit()
+    db.refresh(db_subcategory)
+    return db_subcategory
+
+def delete_subcategory(db: Session, subcategory_id: int) -> None:
+    db_subcategory = db.query(SubCategory).filter(SubCategory.id == subcategory_id).first()
+    if db_subcategory:
+        db.delete(db_subcategory)
+        db.commit()
+    else:
+        raise HTTPException(status_code=404, detail="SubCategory not found")
 
 # CRUD operations for Order
 def get_orders(db: Session, skip: int = 0, limit: int = 10, user_email: Optional[str] = None) -> List[Order]:

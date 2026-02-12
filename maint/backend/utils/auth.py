@@ -19,3 +19,13 @@ admin_only = RoleChecker(["admin"])
 fournisseur_only = RoleChecker(["fournisseur"])
 admin_or_fournisseur = RoleChecker(["admin", "fournisseur"])
 any_authenticated = RoleChecker(["admin", "fournisseur", "client"])
+
+import re
+import unicodedata
+
+def getSlug(text: str) -> str:
+    if not text:
+        return ""
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
+    text = re.sub(r'[^\w\s-]', '', text).strip().lower()
+    return re.sub(r'[-\s]+', '-', text)

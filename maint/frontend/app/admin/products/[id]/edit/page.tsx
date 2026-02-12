@@ -23,6 +23,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         price: 0,
         stock_quantity: 0,
         category_id: 0,
+        subcategory_id: 0,
         image_url: '',
         slug: '',
         in_stock: true,
@@ -149,12 +150,35 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                             <select
                                 name="category_id"
                                 value={formData.category_id}
-                                onChange={handleChange}
+                                onChange={(e) => {
+                                    const catId = parseInt(e.target.value)
+                                    const selectedCat = categories.find(c => c.id === catId)
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        category_id: catId,
+                                        subcategory_id: selectedCat?.subcategories && selectedCat.subcategories.length > 0 ? selectedCat.subcategories[0].id : 0
+                                    }))
+                                }}
                                 required
                                 className="w-full px-4 py-2 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                             >
                                 {categories.map(cat => (
                                     <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium mb-2">Sous-catégorie</label>
+                            <select
+                                name="subcategory_id"
+                                value={formData.subcategory_id || 0}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                                <option value="0">Aucune sous-catégorie</option>
+                                {categories.find(c => c.id === formData.category_id)?.subcategories?.map(sub => (
+                                    <option key={sub.id} value={sub.id}>{sub.name}</option>
                                 ))}
                             </select>
                         </div>

@@ -6,7 +6,6 @@ from datetime import datetime
 
 
 class ProductBase(BaseModel):
-    id: Optional[int] = None
     name: str
     description: Optional[str] = None
     price: float
@@ -14,6 +13,7 @@ class ProductBase(BaseModel):
     stock_quantity: int
     in_stock: Optional[bool] = True
     category_id: int
+    subcategory_id: Optional[int] = None
     image_url: Optional[str] = None
     image2_url: Optional[str] = None
     image3_url: Optional[str] = None
@@ -31,37 +31,48 @@ class ProductBase(BaseModel):
     features: Optional[List[str]] = None
     sku: Optional[str] = None
     slug: str
+    category_name: Optional[str] = None
+    subcategory_name: Optional[str] = None
     
     class Config:
         from_attributes = True
 
 class ProductResponse(ProductBase):
     id: int
-    discounted_price: Optional[float] = None
-    category_name: Optional[str] = None
-
-    class Config:
-        from_attributes = True
 
 class CategoryBase(BaseModel):
-    id: Optional[int] = None 
     name: str
     description: Optional[str] = None
     image_url: Optional[str] = None
 
     class Config:
         from_attributes = True
-class CategoryCreate(CategoryBase):
-    pass
-
-class CategoryUpdate(CategoryBase):
-    pass
 
 class CategoryResponse(CategoryBase):
     id: int
+    subcategories: List["SubCategoryResponse"] = []
+
+
+class SubCategoryBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    image_url: Optional[str] = None
+    slug: str
+    category_id: int
 
     class Config:
         from_attributes = True
+
+class SubCategoryCreate(SubCategoryBase):
+    pass
+
+class SubCategoryUpdate(SubCategoryBase):
+    pass
+
+class SubCategoryResponse(SubCategoryBase):
+    id: int
+    category_name: Optional[str] = None
+
 
 class OrderItemBase(BaseModel):
     product_id: int
@@ -129,15 +140,11 @@ class OrderResponse(BaseModel):
 
 class OrderItemDetail(OrderItemBase):
     product: Optional[ProductResponse] = None
-    class Config:
-        from_attributes = True
 
 class OrderDetail(OrderBase):
     items: List[OrderItemDetail]
     shipping_cost: float = 0.0
     tax_amount: float = 0.0
-    class Config:
-        from_attributes = True
 
 class OrderItemResponse(BaseModel):
     id: int

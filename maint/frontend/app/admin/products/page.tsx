@@ -96,6 +96,7 @@ export default function AdminProductsPage() {
                 <tr>
                   <th className="text-left p-4 font-semibold">Produit</th>
                   <th className="text-left p-4 font-semibold">Catégorie</th>
+                  <th className="text-left p-4 font-semibold">Sous-catégorie</th>
                   <th className="text-left p-4 font-semibold">Prix</th>
                   <th className="text-left p-4 font-semibold">Stock</th>
                   <th className="text-left p-4 font-semibold">Statut</th>
@@ -109,6 +110,7 @@ export default function AdminProductsPage() {
                     <tr key={product.id} className="border-b hover:bg-muted/50">
                       <td className="p-4 font-medium">{product.name}</td>
                       <td className="p-4">{categories[product.category_id] || 'N/A'}</td>
+                      <td className="p-4">{product.subcategory_name || 'N/A'}</td>
                       <td className="p-4 font-semibold">{product.price.toFixed(2)} DT</td>
                       <td className="p-4">
                         <span className={product.stock_quantity > 0 ? 'text-green-600' : 'text-red-600'}>

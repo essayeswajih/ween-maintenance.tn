@@ -15,7 +15,7 @@ services:
     networks:
       - ween_net
 
-  backend:
+  ween-maintenance-backend:
     build: ./maint/backend
     restart: always
     environment:
@@ -30,18 +30,18 @@ services:
     networks:
       - ween_net
 
-  frontend:
+  ween-maintenance-frontend:
     build: ./maint/frontend
     restart: always
     environment:
       PORT: 3005
       NEXT_PUBLIC_API_URL: "/api"
-      SERVER_API_URL: "http://backend:8005"
+      SERVER_API_URL: "http://ween-maintenance-backend:8005"
       NEXT_PUBLIC_BASE_URL: "https://ween-maintenance.tn"
       #NODE_ENV: "production"
       NODE_ENV: "dev"
     depends_on:
-      - backend
+      - ween-maintenance-backend
     networks:
       - ween_net
     ports:

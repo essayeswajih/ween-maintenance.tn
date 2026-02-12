@@ -45,10 +45,12 @@ class Product(Base):
     rating = Column(Float, nullable=True)
     num_ratings = Column(Integer, nullable=True)
     in_stock = Column(Boolean, default=True)
+    subcategory_id = Column(Integer, ForeignKey("subcategories.id"), nullable=True)
     slug = Column(String, nullable=False, unique=True)
 
     # Relationships
     category = relationship("Category", back_populates="products")
+    subcategory = relationship("SubCategory", back_populates="products")
     order_items = relationship("OrderItem", back_populates="product")
     orders = relationship(
         "Order",
@@ -60,6 +62,14 @@ class Product(Base):
     supplier_id = Column(Integer, ForeignKey("suppliers.id"))
     supplier = relationship("Supplier", back_populates="products")
 
+    @property
+    def category_name(self) -> Optional[str]:
+        return self.category.name if self.category else None
+
+    @property
+    def subcategory_name(self) -> Optional[str]:
+        return self.subcategory.name if self.subcategory else None
+
 # Category Model
 class Category(Base):
     __tablename__ = "categories"
@@ -69,6 +79,25 @@ class Category(Base):
     image_url = Column(Text, nullable=True)
 
     products = relationship("Product", back_populates="category")
+    subcategories = relationship("SubCategory", back_populates="category", cascade="all, delete-orphan")
+
+# SubCategory Model
+class SubCategory(Base):
+    __tablename__ = "subcategories"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    image_url = Column(Text, nullable=True)
+    slug = Column(String, nullable=False, unique=True)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+
+    # Relationships
+    category = relationship("Category", back_populates="subcategories")
+    products = relationship("Product", back_populates="subcategory")
+
+    @property
+    def category_name(self) -> Optional[str]:
+        return self.category.name if self.category else None
 
 # OrderItem Model (Intermediary between Order and Product)
 class OrderItem(Base):

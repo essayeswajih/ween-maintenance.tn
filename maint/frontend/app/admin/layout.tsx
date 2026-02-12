@@ -4,7 +4,7 @@ import React from "react"
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, BarChart3, Package, Wrench, ShoppingBag, FileText, Users, Settings, LogOut, Image } from 'lucide-react'
+import { Menu, X, BarChart3, Package, Wrench, ShoppingBag, FileText, Users, Settings, LogOut, Image, Tags, Layers } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/auth-context'
 import { useRouter } from 'next/navigation'
@@ -21,6 +21,8 @@ export default function AdminLayout({
   const menuItems = [
     { icon: BarChart3, label: 'Tableau de bord', href: '/admin/dashboard' },
     { icon: Package, label: 'Produits', href: '/admin/products' },
+    { icon: Tags, label: 'Catégories', href: '/admin/categories' },
+    { icon: Layers, label: 'Sous-catégories', href: '/admin/subcategories' },
     { icon: Wrench, label: 'Services', href: '/admin/services' },
     { icon: ShoppingBag, label: 'Commandes', href: '/admin/orders' },
     { icon: FileText, label: 'Devis', href: '/admin/quotes' },

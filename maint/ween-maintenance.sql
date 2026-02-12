@@ -133,6 +133,21 @@ CREATE TABLE public.categories (
 ALTER TABLE public.categories OWNER TO postgres;
 
 --
+-- Name: subcategories; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.subcategories (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    description character varying,
+    image_url text,
+    slug character varying NOT NULL,
+    category_id integer NOT NULL
+);
+
+ALTER TABLE public.subcategories OWNER TO postgres;
+
+--
 -- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -152,6 +167,21 @@ ALTER SEQUENCE public.categories_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
+
+--
+-- Name: subcategories_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.subcategories_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.subcategories_id_seq OWNER TO postgres;
+ALTER SEQUENCE public.subcategories_id_seq OWNED BY public.subcategories.id;
 
 
 --
@@ -363,7 +393,8 @@ CREATE TABLE public.products (
     num_ratings integer,
     in_stock boolean,
     slug character varying NOT NULL,
-    supplier_id integer
+    supplier_id integer,
+    subcategory_id integer
 );
 
 
@@ -758,6 +789,12 @@ ALTER TABLE ONLY public.cart_items ALTER COLUMN id SET DEFAULT nextval('public.c
 --
 
 ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
+
+--
+-- Name: subcategories id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subcategories ALTER COLUMN id SET DEFAULT nextval('public.subcategories_id_seq'::regclass);
 
 
 --
@@ -1625,6 +1662,22 @@ ALTER TABLE ONLY public.ratings
 
 ALTER TABLE ONLY public.services
     ADD CONSTRAINT services_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories_service(id);
+
+
+--
+-- Name: subcategories subcategories_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subcategories
+    ADD CONSTRAINT subcategories_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id);
+
+
+--
+-- Name: products products_subcategory_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_subcategory_id_fkey FOREIGN KEY (subcategory_id) REFERENCES public.subcategories(id);
 
 
 --

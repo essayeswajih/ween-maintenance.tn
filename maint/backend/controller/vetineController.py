@@ -5,13 +5,14 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from controller.Oauth2C import get_current_user
 from db.database import get_db
-from models.vetrineModels import Product, Order, OrderItem, CartItem, Category
+from models.vetrineModels import Product, Order, OrderItem, CartItem, Category, SubCategory
 from models.Oauth2Models import User
-from schemas.vetrine import CategoryBase, OrederStatus, ProductBase, OrderCreate, CartItemBase, OrderItemBase, OrderBase, ProductResponse, OrderDetail
+from schemas.vetrine import CategoryBase, OrederStatus, ProductBase, OrderCreate, CartItemBase, OrderItemBase, OrderBase, ProductResponse, OrderDetail, SubCategoryBase, SubCategoryResponse, CategoryResponse
 from crud.vetrineCrud import (
     create_category, delete_category, delete_product, get_categories, get_category_by_id,
     get_products, get_product_by_id, get_product_by_slug, create_product, get_orders, create_order,
-    get_cart_items, add_to_cart, remove_from_cart, update_category, update_product, get_order_by_id
+    get_cart_items, add_to_cart, remove_from_cart, update_category, update_product, get_order_by_id,
+    get_subcategories, get_subcategory_by_id, create_subcategory, update_subcategory, delete_subcategory, get_subcategories_by_category
 )
 from crud.settingsCrud import get_settings
 from controller.sendMail import AdminEmail, send_email
@@ -36,11 +37,12 @@ def check_admin(current_user: User = Depends(get_current_user)):
         raise HTTPException(status_code=401, detail="Not authorized")
 
 # Route to get all products with filtering options
-@router.get("/products", response_model=List[ProductBase])
+@router.get("/products", response_model=List[ProductResponse])
 def get_all_products(
     skip: int = 0,
     limit: int = 100,
     category: Optional[str] = None,
+    subcategory: Optional[str] = None,
     max_price: Optional[float] = None,
     sortBy: Optional[str] = 'popularite',  # Default sortBy value
     search: Optional[str] = None,
@@ -51,6 +53,7 @@ def get_all_products(
         skip=skip,
         limit=limit,
         category_name=category,
+        subcategory_name=subcategory,
         max_price=max_price,
         sortBy=sortBy,
         searchFor=search
@@ -63,9 +66,6 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     
-    # Map category name for breadcrumbs
-    if db_product.category:
-        db_product.category_name = db_product.category.name
     return db_product
 
 @router.get("/products/slug/{product_slug}", response_model=ProductResponse)
@@ -74,9 +74,6 @@ def get_product_by_slug_endpoint(product_slug: str , db: Session = Depends(get_d
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     
-    # Map category name for breadcrumbs
-    if db_product.category:
-        db_product.category_name = db_product.category.name
     return db_product
 
 # Route to create a new product
@@ -101,7 +98,7 @@ def delete_product_info(product_id: int, db: Session = Depends(get_db)):
     return {"message": "Product deleted successfully."}
 
 # Route to get all categories
-@router.get("/categories", response_model=List[CategoryBase])
+@router.get("/categories", response_model=List[CategoryResponse])
 def get_all_categories(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return get_categories(db, skip=skip, limit=limit)
 
@@ -131,6 +128,41 @@ def update_category_info(category_id: int, category: CategoryBase, db: Session =
 def delete_category_info(category_id: int, db: Session = Depends(get_db)):
     delete_category(db, category_id)
     return {"message": "Category deleted successfully."}
+
+# SubCategory Endpoints
+
+@router.get("/subcategories", response_model=List[SubCategoryResponse])
+def get_all_subcategories(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    subcategories = get_subcategories(db, skip=skip, limit=limit)
+    return subcategories
+
+@router.get("/subcategories/{subcategory_id}", response_model=SubCategoryResponse)
+def get_subcategory(subcategory_id: int, db: Session = Depends(get_db)):
+    db_subcategory = get_subcategory_by_id(db, subcategory_id)
+    if db_subcategory is None:
+        raise HTTPException(status_code=404, detail="SubCategory not found")
+    return db_subcategory
+
+@router.get("/categories/{category_id}/subcategories", response_model=List[SubCategoryResponse])
+def get_subcategories_for_category(category_id: int, db: Session = Depends(get_db)):
+    subcategories = get_subcategories_by_category(db, category_id)
+    return subcategories
+
+@router.post("/subcategories", response_model=SubCategoryBase, dependencies=[Depends(check_admin)])
+def create_new_subcategory(subcategory: SubCategoryBase, db: Session = Depends(get_db)):
+    return create_subcategory(db, subcategory)
+
+@router.put("/subcategories/{subcategory_id}", response_model=SubCategoryBase, dependencies=[Depends(check_admin)])
+def update_subcategory_info(subcategory_id: int, subcategory: SubCategoryBase, db: Session = Depends(get_db)):
+    updated_subcategory = update_subcategory(db, subcategory_id, subcategory)
+    if updated_subcategory is None:
+        raise HTTPException(status_code=404, detail="SubCategory not found")
+    return updated_subcategory
+
+@router.delete("/subcategories/{subcategory_id}", response_model=dict, dependencies=[Depends(check_admin)])
+def delete_subcategory_info(subcategory_id: int, db: Session = Depends(get_db)):
+    delete_subcategory(db, subcategory_id)
+    return {"message": "SubCategory deleted successfully."}
 
 # Route to get orders for a user (use Pydantic schema here)
 @router.get("/orders", response_model=List[OrderBase])

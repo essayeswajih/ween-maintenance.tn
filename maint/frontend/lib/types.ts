@@ -39,6 +39,8 @@ export interface Product {
     sku?: string
     category?: string
     category_name?: string
+    subcategory_id?: number
+    subcategory_name?: string
 }
 
 export interface ServiceCategory {
@@ -78,11 +80,19 @@ export interface Rating {
     user?: User
 }
 
+export interface SubCategory {
+    id: number
+    name: string
+    category_id: number
+    slug: string
+}
+
 export interface Category {
     id: number
     name: string
     description?: string
     image_url?: string
+    subcategories?: SubCategory[]
 }
 
 export interface Blog {
